@@ -1,4 +1,4 @@
-package com.example.unnamedai.ui.theme
+package com.example.unnamedai.theme
 
 import androidx.compose.material.Typography
 import androidx.compose.ui.text.TextStyle

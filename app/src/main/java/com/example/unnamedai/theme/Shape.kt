@@ -1,4 +1,4 @@
-package com.example.unnamedai.ui.theme
+package com.example.unnamedai.theme
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Shapes

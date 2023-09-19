@@ -1,4 +1,4 @@
-package com.example.unnamedai.ui.theme
+package com.example.unnamedai.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.MaterialTheme
