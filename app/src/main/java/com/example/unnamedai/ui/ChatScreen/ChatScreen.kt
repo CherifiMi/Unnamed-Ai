@@ -1,4 +1,8 @@
 package com.example.unnamedai.ui.ChatScreen
 
-class ChatScreen {
+import androidx.compose.runtime.Composable
+
+@Composable
+fun ChatScreen() {
+
 }
