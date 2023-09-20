@@ -2,8 +2,10 @@ package com.example.unnamedai.ui.ChatScreen
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandIn
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkOut
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -16,9 +18,12 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -32,11 +37,19 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
@@ -48,14 +61,24 @@ import com.example.unnamedai.R
 import com.example.unnamedai.chatTF
 import com.example.unnamedai.currentConvo
 import com.example.unnamedai.showHistoryScreen
+import com.example.unnamedai.themTF
+import com.example.unnamedai.theme.Black
+import com.example.unnamedai.theme.Blue
 import com.example.unnamedai.theme.Input
 import com.example.unnamedai.theme.Red
 import com.example.unnamedai.theme.White
 import com.example.unnamedai.theme.abel
+import com.example.unnamedai.youTF
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun ChatScreen(modifier: Modifier = Modifier) {
+
+    val listState = LazyListState()
+    LaunchedEffect(currentConvo.size){
+        listState.scrollToItem(currentConvo.size-1)
+    }
+
     Scaffold(
         modifier = modifier.fillMaxSize(),
         topBar = {
@@ -135,41 +158,173 @@ fun ChatScreen(modifier: Modifier = Modifier) {
         },
         backgroundColor = Color.Black
     ) {
-        Column(
-            modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState(), reverseScrolling = true)
+        LazyColumn(
+            state = listState,
+            modifier = modifier
+                .fillMaxSize(),
         ) {
-            Spacer(modifier = Modifier.height(72.dp))
+            item {
+                Spacer(modifier = Modifier.height(72.dp))
+            }
 
-            AnimatedVisibility(
-                visible = currentConvo.size == 0,
-                enter = fadeIn(),
-                exit = fadeOut()
-            ) {
+            item {
+                AnimatedVisibility(
+                    visible = currentConvo.size == 0,
+                    enter = fadeIn(),
+                    exit = fadeOut() + shrinkOut()
+                ) {
+                    Text(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(40.dp),
+                        text = "Lets get this conversation between Super Mario and Bowser started!",
+                        textAlign = TextAlign.Center,
+                        fontFamily = abel,
+                        lineHeight = 28.sp,
+                        fontSize = 22.sp,
+                        color = White,
+                    )
+                }
+            }
+
+            items(currentConvo) {
+                if (it.from == "you") {
+                    YouItem(it)
+                } else {
+                    Spacer(modifier = Modifier.height(40.dp))
+                    ThemItem(it)
+                }
+            }
+
+            item {
+                Spacer(modifier = Modifier.height(200.dp))
+            }
+        }
+    }
+}
+
+@Composable
+fun YouItem(item: Message) {
+    var animation by remember {
+        mutableStateOf(false)
+    }
+
+    LaunchedEffect(Unit) {
+        animation = true
+    }
+
+    AnimatedVisibility(visible = animation, enter = fadeIn()) {
+        Column(
+            Modifier
+                .fillMaxWidth()
+                .wrapContentHeight()
+        ) {
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp),
+                text = item.content,
+                textAlign = TextAlign.Start,
+                fontFamily = abel,
+                lineHeight = 28.sp,
+                fontSize = 22.sp,
+                color = White,
+            )
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                 Text(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(40.dp),
-                    text = "Lets get this conversation between Super Mario and Bowser started!",
-                    textAlign = TextAlign.Center,
+                        .padding(start = 24.dp)
+                        .alpha(.5f),
+                    text = "You (${youTF.value})",
                     fontFamily = abel,
-                    lineHeight = 28.sp,
-                    fontSize = 22.sp,
+                    fontSize = 16.sp,
+                    lineHeight = 21.sp,
                     color = White,
+                )
+                Image(
+                    modifier = Modifier
+                        .padding(end = 24.dp)
+                        .alpha(.5f),
+                    painter = painterResource(id = R.drawable.more),
+                    contentDescription = null
+                )
+            }
+        }
+    }
+}
+
+
+@Composable
+fun ThemItem(item: Message) {
+    var animation by remember {
+        mutableStateOf(false)
+    }
+
+    LaunchedEffect(Unit) {
+        animation = true
+    }
+
+    AnimatedVisibility(
+        visible = animation, enter =  fadeIn()
+    ) {
+        Column(
+            Modifier
+                .fillMaxWidth()
+                .wrapContentHeight()
+                .padding(20.dp)
+                .background(White, RoundedCornerShape(10.dp))
+
+        ) {
+            Box(
+                Modifier
+                    .offset(y = -20.dp)
+                    .padding(horizontal = 20.dp)
+                    .size(40.dp)
+                    .background(Blue, RoundedCornerShape(100))
+                    .clip(RoundedCornerShape(100))
+            )
+
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp)
+                    .padding(bottom = 15.dp),
+                text = item.content,
+                textAlign = TextAlign.Start,
+                fontFamily = abel,
+                lineHeight = 28.sp,
+                fontSize = 22.sp,
+                color = Black,
+            )
+
+            Row(
+                Modifier
+                    .height(34.dp)
+                    .fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                Spacer(modifier = Modifier.size(8.dp))
+                Icon(
+                    modifier = Modifier
+                        .padding(end = 24.dp)
+                        .alpha(.5f),
+                    tint = Black,
+                    painter = painterResource(id = R.drawable.more),
+                    contentDescription = null
                 )
             }
 
+            Text(
+                modifier = Modifier
+                    .padding(start = 24.dp)
+                    .alpha(.5f),
+                text = "Them (${themTF.value})",
+                fontFamily = abel,
+                fontSize = 16.sp,
+                lineHeight = 21.sp,
+                color = Black,
+            )
 
-            for (item in currentConvo){
-
-                Box(modifier = Modifier.fillMaxWidth().height(50.dp).background(Red)){
-                    Text(text = item.from)
-                }
-
-            }
-
-            Spacer(modifier = Modifier.height(72.dp))
         }
     }
+
+
 }
