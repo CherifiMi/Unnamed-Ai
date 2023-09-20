@@ -70,7 +70,7 @@ fun StartScreen(modifier: Modifier = Modifier) {
             exit = slideOutVertically() + shrinkVertically() + fadeOut(),
             visible = setterVisibility.value
         ) {
-            ChatSetter(Modifier.clickable { showChatScreen.value = true })
+            ChatSetter()
         }
 
     }
