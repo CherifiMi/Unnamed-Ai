@@ -40,7 +40,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    App()
+                    HistoryScreen()
                 }
             }
         }
@@ -72,13 +72,13 @@ fun App() {
         AnimatedVisibility(
             visible = showHistoryScreen.value,
             enter = slideInHorizontally(
-                initialOffsetX = { -300 }, // Slide in from the left
+                initialOffsetX = { 300 }, // Slide in from the left
                 animationSpec = tween(durationMillis = 300)
-            ),
+            )+ fadeIn(),
             exit = slideOutHorizontally(
-                targetOffsetX = { -300 }, // Slide out to the left
+                targetOffsetX = { 300 }, // Slide out to the left
                 animationSpec = tween(durationMillis = 300)
-            )
+            )+ fadeOut()
         ) {
             HistoryScreen()
         }
