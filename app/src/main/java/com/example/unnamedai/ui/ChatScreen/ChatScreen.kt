@@ -41,6 +41,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.unnamedai.R
+import com.example.unnamedai.chatTF
 import com.example.unnamedai.showHistoryScreen
 import com.example.unnamedai.theme.Black
 import com.example.unnamedai.theme.DarkLogo
@@ -96,8 +97,8 @@ fun ChatScreen(modifier: Modifier = Modifier) {
                 contentAlignment = Alignment.CenterStart
             ) {
                 TextField(
-                    value = "",
-                    onValueChange = {},
+                    value = chatTF.value,
+                    onValueChange = {chatTF.value = it},
                     modifier = Modifier
                         .border(BorderStroke(1.dp, Color.Transparent))
                         .fillMaxWidth(),
