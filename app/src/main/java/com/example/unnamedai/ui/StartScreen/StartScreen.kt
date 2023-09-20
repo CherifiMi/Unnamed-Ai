@@ -24,22 +24,26 @@ import com.example.unnamedai.ui.StartScreen.Components.ChatSetter
 import com.example.unnamedai.ui.StartScreen.Components.SplachScreen
 import com.example.unnamedai.ui.StartScreen.Components.WlcomePopUp
 
+
+
+var wlcVisibility  = mutableStateOf(false)
+var setterVisibility  = mutableStateOf(false)
+
+
 @Composable
 fun StartScreen(modifier: Modifier = Modifier) {
 
-    var wlcVisibility by remember { mutableStateOf(false) }
-    var setterVisibility by remember { mutableStateOf(false) }
 
 
     Box(modifier = Modifier.fillMaxSize()){
 
         Column(modifier.fillMaxSize()) {
 
-            SplachScreen(Modifier.weight(.7f).clickable { wlcVisibility = true })
+            SplachScreen(Modifier.weight(.7f).clickable { wlcVisibility.value = true })
 
-            AnimatedVisibility(visible = wlcVisibility && !setterVisibility) {
+            AnimatedVisibility(visible = wlcVisibility.value && !setterVisibility.value) {
 
-                WlcomePopUp(Modifier.weight(.3f).clickable { setterVisibility = true })
+                WlcomePopUp(Modifier.weight(.3f).clickable { setterVisibility.value = true })
 
             }
         }
@@ -52,7 +56,7 @@ fun StartScreen(modifier: Modifier = Modifier) {
                 with(density) { 300.dp.roundToPx() }
             },
             exit = slideOutVertically() + shrinkVertically() + fadeOut(),
-            visible = setterVisibility) {
+            visible = setterVisibility.value) {
             ChatSetter(Modifier.clickable { showChatScreen.value = true })
         }
 
