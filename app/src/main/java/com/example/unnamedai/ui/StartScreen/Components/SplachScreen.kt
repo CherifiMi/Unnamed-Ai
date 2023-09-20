@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.sp
 import com.example.unnamedai.R
 import com.example.unnamedai.theme.White
 import com.example.unnamedai.theme.abel
-import com.example.unnamedai.ui.wlcVisibility
+import com.example.unnamedai.wlcVisibility
 
 @Composable
 fun SplachScreen(modifier: Modifier = Modifier) {
