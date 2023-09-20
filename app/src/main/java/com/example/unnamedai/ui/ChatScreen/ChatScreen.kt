@@ -1,10 +1,12 @@
 package com.example.unnamedai.ui.ChatScreen
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,6 +23,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
@@ -38,6 +41,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.unnamedai.R
+import com.example.unnamedai.showHistoryScreen
 import com.example.unnamedai.theme.Black
 import com.example.unnamedai.theme.DarkLogo
 import com.example.unnamedai.theme.Grey
@@ -66,7 +70,18 @@ fun ChatScreen(modifier: Modifier = Modifier) {
                     painter = painterResource(id = R.drawable.dark_ic_unnamed),
                     contentDescription = null
                 )
-                Image(painter = painterResource(id = R.drawable.menu), contentDescription = null)
+                IconButton(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(100)),
+                    onClick = {
+                        showHistoryScreen.value = true
+                    }
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.menu),
+                        contentDescription = null
+                    )
+                }
             }
         },
         bottomBar = {
