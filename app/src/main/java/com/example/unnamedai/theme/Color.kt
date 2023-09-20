@@ -16,3 +16,5 @@ val Red = Color(0xFF_EB3E17)
 val Yellow = Color(0xFF_E9970A)
 val Green = Color(0xFF_18AE81)
 val Input = Color(0xFF_303030)
+
+val DarkLogo = Color(0xFF_8B8B8B)

@@ -48,18 +48,17 @@ import com.example.unnamedai.theme.abel
 import kotlinx.coroutines.delay
 
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun ChatSetter(modifier: Modifier = Modifier) {
 
-    val keyboard = LocalSoftwareKeyboardController.current
+    /*val keyboard = LocalSoftwareKeyboardController.current
     val focusRequester = remember { FocusRequester() }
 
     LaunchedEffect(Unit) {
         focusRequester.requestFocus()
-        delay(100)
+        delay(1000)
         keyboard?.show()
-    }
+    }*/
 
     Column(
         modifier
@@ -94,7 +93,7 @@ fun ChatSetter(modifier: Modifier = Modifier) {
             color = Black,
         )
 
-        UnnamedTextField(modifier = Modifier.focusRequester(focusRequester), placeholder = "Enter your name/alias")
+        UnnamedTextField(/*modifier = Modifier.focusRequester(focusRequester),*/ placeholder = "Enter your name/alias")
         UnnamedTextField(placeholder = "Enter some information about yourself.")
 
         Spacer(modifier = Modifier.height(24.dp))

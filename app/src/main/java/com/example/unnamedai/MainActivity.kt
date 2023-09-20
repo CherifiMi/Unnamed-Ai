@@ -5,8 +5,11 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.unnamedai.theme.UnnamedAiTheme
 import com.example.unnamedai.ui.ChatScreen.ChatScreen
+import com.example.unnamedai.ui.HistoryScreen.HistoryScreen
 import com.example.unnamedai.ui.StartScreen
 
 class MainActivity : ComponentActivity() {
@@ -31,7 +35,8 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    App()
+                    ChatScreen()
+                    //App()
                 }
             }
         }
@@ -39,6 +44,7 @@ class MainActivity : ComponentActivity() {
 }
 
 val showChatScreen = mutableStateOf(false)
+val showHistoryScreen = mutableStateOf(false)
 
 @Composable
 fun App() {
@@ -58,6 +64,22 @@ fun App() {
         ) {
             ChatScreen()
         }
+
+
+        AnimatedVisibility(
+            visible = showHistoryScreen.value,
+            enter = slideInHorizontally(
+                initialOffsetX = { -300 }, // Slide in from the left
+                animationSpec = tween(durationMillis = 300)
+            ),
+            exit = slideOutHorizontally(
+                targetOffsetX = { -300 }, // Slide out to the left
+                animationSpec = tween(durationMillis = 300)
+            )
+        ) {
+            HistoryScreen()
+        }
+
 
     }
 }
