@@ -12,8 +12,8 @@ import androidx.compose.ui.res.painterResource
 import com.example.unnamedai.R
 
 @Composable
-fun SplachScreen() {
-    Box(modifier = Modifier
+fun SplachScreen(modifier: Modifier = Modifier) {
+    Box(modifier = modifier
         .fillMaxSize()
         .background(Color.Black), contentAlignment = Alignment.Center
     ){
