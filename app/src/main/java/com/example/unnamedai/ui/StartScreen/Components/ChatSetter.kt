@@ -17,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -25,6 +26,7 @@ import com.example.unnamedai.showChatScreen
 import com.example.unnamedai.theme.Black
 import com.example.unnamedai.theme.Border
 import com.example.unnamedai.theme.Grey
+import com.example.unnamedai.theme.Input
 import com.example.unnamedai.theme.abel
 
 
@@ -102,9 +104,15 @@ fun UnnamedTextField(
             )
         },
         shape = RoundedCornerShape(20),
+        textStyle = TextStyle(
+            color = Input, fontFamily = abel,
+            lineHeight = 22.sp,
+            fontSize = 18.sp
+        ),
         colors = TextFieldDefaults.outlinedTextFieldColors(
             focusedBorderColor = Grey,
             unfocusedBorderColor = Border
+        ),
+
         )
-    )
 }
