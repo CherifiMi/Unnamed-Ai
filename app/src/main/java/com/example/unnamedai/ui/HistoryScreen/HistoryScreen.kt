@@ -114,16 +114,23 @@ fun HistoryScreen() {
                             .alpha(.1f)
                     )
                     Spacer(modifier = Modifier.height(24.dp))
-                    Text(
-                        modifier = Modifier
-                            .padding(start = 24.dp)
-                            .alpha(.5f),
-                        text = it.date,
-                        fontFamily = abel,
-                        fontSize = 16.sp,
-                        lineHeight = 21.sp,
-                        color = White,
-                    )
+                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                        Text(
+                            modifier = Modifier
+                                .padding(start = 24.dp)
+                                .alpha(.5f),
+                            text = it.date,
+                            fontFamily = abel,
+                            fontSize = 16.sp,
+                            lineHeight = 21.sp,
+                            color = White,
+                        )
+                        Image(
+                            modifier = Modifier.padding(end = 24.dp).alpha(.5f),
+                            painter = painterResource(id = R.drawable.more),
+                            contentDescription = null
+                        )
+                    }
 
                     Text(
                         modifier = Modifier.padding(start = 24.dp),
