@@ -12,6 +12,15 @@ var wlcVisibility = mutableStateOf(false)
 var setterVisibility = mutableStateOf(false)
 
 
+//text fields
+var youTF = mutableStateOf("")
+var youWhoTF = mutableStateOf("")
+var themTF = mutableStateOf("")
+var themWhoTF = mutableStateOf("")
+
+var chatTF = mutableStateOf("")
+
+
 //mock data
 
 var currentConvo = mutableListOf<Message>()
