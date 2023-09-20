@@ -76,7 +76,9 @@ fun ChatScreen(modifier: Modifier = Modifier) {
 
     val listState = LazyListState()
     LaunchedEffect(currentConvo.size){
-        listState.scrollToItem(currentConvo.size-1)
+        if (currentConvo.size>0){
+            listState.scrollToItem(currentConvo.size-1)
+        }
     }
 
     Scaffold(
@@ -197,7 +199,7 @@ fun ChatScreen(modifier: Modifier = Modifier) {
             }
 
             item {
-                Spacer(modifier = Modifier.height(200.dp))
+                Spacer(modifier = Modifier.height(72.dp))
             }
         }
     }
