@@ -18,14 +18,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
+import com.example.unnamedai.setterVisibility
 import com.example.unnamedai.showChatScreen
 import com.example.unnamedai.ui.StartScreen.Components.ChatSetter
 import com.example.unnamedai.ui.StartScreen.Components.SplachScreen
 import com.example.unnamedai.ui.StartScreen.Components.WelcomePopUp
-
-
-var wlcVisibility = mutableStateOf(false)
-var setterVisibility = mutableStateOf(false)
+import com.example.unnamedai.wlcVisibility
 
 
 @Composable

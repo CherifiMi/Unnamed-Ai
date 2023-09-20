@@ -22,6 +22,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.unnamedai.theme.Blue
@@ -35,20 +36,17 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             UnnamedAiTheme {
-                // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colors.background
+                    color = Color.Black
                 ) {
-                    HistoryScreen()
+                    App()
+                    //HistoryScreen()
                 }
             }
         }
     }
 }
-
-val showChatScreen = mutableStateOf(false)
-val showHistoryScreen = mutableStateOf(false)
 
 @Composable
 fun App() {
@@ -72,11 +70,11 @@ fun App() {
         AnimatedVisibility(
             visible = showHistoryScreen.value,
             enter = slideInHorizontally(
-                initialOffsetX = { 300 }, // Slide in from the left
+                initialOffsetX = { 300 },
                 animationSpec = tween(durationMillis = 300)
             )+ fadeIn(),
             exit = slideOutHorizontally(
-                targetOffsetX = { 300 }, // Slide out to the left
+                targetOffsetX = { 300 },
                 animationSpec = tween(durationMillis = 300)
             )+ fadeOut()
         ) {
