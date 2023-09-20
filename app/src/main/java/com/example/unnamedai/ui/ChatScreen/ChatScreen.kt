@@ -179,7 +179,7 @@ fun ChatScreen(modifier: Modifier = Modifier) {
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(40.dp),
-                        text = "Lets get this conversation between Super Mario and Bowser started!",
+                        text = "Lets get this conversation between ${youTF.value} and ${themTF.value} started!",
                         textAlign = TextAlign.Center,
                         fontFamily = abel,
                         lineHeight = 28.sp,
