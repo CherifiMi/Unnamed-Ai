@@ -25,6 +25,7 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
@@ -74,10 +75,11 @@ import com.example.unnamedai.youTF
 @Composable
 fun ChatScreen(modifier: Modifier = Modifier) {
 
-    val listState = LazyListState()
+    val listState = rememberLazyListState()
     LaunchedEffect(currentConvo.size){
+
         if (currentConvo.size>0){
-            listState.scrollToItem(currentConvo.size-1)
+            listState.scrollToItem(currentConvo.size+1)
         }
     }
 
@@ -131,7 +133,7 @@ fun ChatScreen(modifier: Modifier = Modifier) {
                     keyboardActions = KeyboardActions(onDone = {
                         currentConvo.add(Message(from = "you", content = chatTF.value))
                         chatTF.value = ""
-                        currentConvo.add(Message(from = "them", content = "nothing"))
+                        currentConvo.add(Message(from = "them", content = "Hello Super Mario.. What brings you here?"))
                     }),
                     colors = TextFieldDefaults.textFieldColors(
                         backgroundColor = Color.Transparent,
@@ -283,8 +285,11 @@ fun ThemItem(item: Message) {
                     .padding(horizontal = 20.dp)
                     .size(40.dp)
                     .background(Blue, RoundedCornerShape(100))
-                    .clip(RoundedCornerShape(100))
-            )
+                    .clip(RoundedCornerShape(100)),
+                contentAlignment = Alignment.Center
+            ){
+                Image(painter = painterResource(id = R.drawable.white_ball), contentDescription = null)
+            }
 
             Text(
                 modifier = Modifier
