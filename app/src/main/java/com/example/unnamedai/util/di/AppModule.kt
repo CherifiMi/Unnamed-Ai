@@ -5,6 +5,8 @@ import android.content.Context
 import androidx.room.Room
 import com.example.unnamedai.data.local.DatabaseRepositoryImp
 import com.example.unnamedai.data.local.UnnamedAiDatabase
+import com.example.unnamedai.data.remote.ApiRepositoryImp
+import com.example.unnamedai.domain.repository.ApiRepository
 import com.example.unnamedai.domain.repository.DatabaseRepository
 import com.example.unnamedai.domain.use_case.UseCases
 import dagger.Module
@@ -22,6 +24,12 @@ object AppModule {
     @Singleton
     fun provideDatabaseRepository(dp: UnnamedAiDatabase): DatabaseRepository {
         return DatabaseRepositoryImp(dp.unnamedAiDao)
+    }
+
+    @Provides
+    @Singleton
+    fun provideApiRepository(): ApiRepository {
+        return ApiRepositoryImp()
     }
 
     @Provides
