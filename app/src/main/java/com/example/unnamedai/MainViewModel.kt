@@ -1,5 +1,7 @@
 package com.example.unnamedai
 
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -21,7 +23,7 @@ sealed class MainEvents {
 
     object ClickWelcome : MainEvents()
 
-    object ClickChatSetter : MainEvents()
+    data class ClickChatSetter(val context: Context) : MainEvents()
 
     object PressDoneOnKeyboard : MainEvents()
 
@@ -68,14 +70,20 @@ class MainViewModel @Inject constructor(
             MainEvents.ClickWelcome -> _state.value =
                 state.value.copy(setterVisibility = true, wlcVisibility = false)
 
-            MainEvents.ClickChatSetter -> {
+            is MainEvents.ClickChatSetter -> {
                 if (
                     state.value.youTF.isBlank() &&
                     state.value.youWhoTF.isBlank() &&
                     state.value.themTF.isBlank() &&
                     state.value.themWhoTF.isBlank()
                 ) {
-                    // show taost
+
+                    Toast.makeText(
+                        event.context,
+                        "Please fill all the fields",
+                        Toast.LENGTH_SHORT
+                    ).show()
+
                     return
                 }
 
@@ -111,9 +119,6 @@ class MainViewModel @Inject constructor(
                             )
                     }
                 }
-
-                //show chatgbt respond
-
             }
 
             MainEvents.ClickBacKFromHistory -> TODO()
