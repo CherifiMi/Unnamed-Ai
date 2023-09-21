@@ -1,70 +1,73 @@
 package com.example.unnamedai
 
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
+import com.example.unnamedai.domain.model.Conversation
+import com.example.unnamedai.domain.model.Msg
+import com.example.unnamedai.domain.use_case.UseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 
-@HiltViewModel
-class MainViewModel @Inject constructor() : ViewModel() {
 
+
+//delete from history **
+// convorsation from history **
+
+
+sealed class MainEvents {
+    object SwipeSplachScreen : MainEvents()
+
+    object ClickWelcome : MainEvents()
+
+    object ClickChatSetter : MainEvents()
+
+    object PressDoneOnKeyboard : MainEvents()
+
+    object ClickStartNewChat : MainEvents()
+    object ClickGoToHistory : MainEvents()
+    object ClickBacFromHistory : MainEvents()
+    data class DeleteConversationFromHistory(val id: Int): MainEvents()
+    data class SelectConversationFromHistory(val id: Int): MainEvents()
 }
 
-
-//main
-val showChatScreen = mutableStateOf(false)
-val showHistoryScreen = mutableStateOf(false)
-
-//start
-var wlcVisibility = mutableStateOf(false)
-var setterVisibility = mutableStateOf(false)
-
-
-//text fields
-var youTF = mutableStateOf("")
-var youWhoTF = mutableStateOf("")
-var themTF = mutableStateOf("")
-var themWhoTF = mutableStateOf("")
-
-var chatTF = mutableStateOf("")
-
-
-//mock data
-val currentConvo = mutableStateListOf<Message>()
-
-
-var history = listOf(
-    Convo(
-        you = "SuperMario",
-        them = "Bowser",
-        date = "Today",
-        talk = listOf()
-    ),
-    Convo(
-        you = "UsersName",
-        them = "AiName",
-        date = "02 Feb, 2023",
-        talk = listOf()
-    ),
-    Convo(
-        you = "UsersName2",
-        them = "AiName2",
-        date = "10 Feb, 2023",
-        talk = listOf()
-    ),
+data class MainState(
+    //main
+    val showChatScreen: MutableState<Boolean> = mutableStateOf(false),
+    val showHistoryScreen: MutableState<Boolean> = mutableStateOf(false),
+    //start,
+    var wlcVisibility: MutableState<Boolean> = mutableStateOf(false),
+    var setterVisibility: MutableState<Boolean> = mutableStateOf(false),
+    //text fields,
+    var youTF: MutableState<String> = mutableStateOf(""),
+    var youWhoTF: MutableState<String> = mutableStateOf(""),
+    var themTF: MutableState<String> = mutableStateOf(""),
+    var themWhoTF: MutableState<String> = mutableStateOf(""),
+    //chat,
+    var chatTF: MutableState<String> = mutableStateOf(""),
+    //data
+    val currentConversation: SnapshotStateList<Msg> = mutableStateListOf(),
+    var history: List<Conversation> = listOf(),
 )
 
+@HiltViewModel
+class MainViewModel @Inject constructor(
+    private val useCases: UseCases
+) : ViewModel() {
+    private val _state = mutableStateOf(MainState())
+    val state: State<MainState> = _state
 
-data class Convo(
-    val you: String,
-    val them: String,
-    val date: String,
-    val talk: List<Message>,
-)
+    //_state.value = state.value.copy
 
-data class Message(
-    val from: String,
-    val content: String
-)
+    fun onEvent(event: MainEvents) {
+        when (event) {
+            else -> {
+                event
+            }
+        }
+    }
+}
