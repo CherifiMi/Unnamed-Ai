@@ -1,68 +1,46 @@
 package com.example.unnamedai.util.di
 
+import android.app.Application
+import android.content.Context
+import androidx.room.Room
+import com.example.unnamedai.data.local.DatabaseRepositoryImp
+import com.example.unnamedai.data.local.UnnamedAiDatabase
+import com.example.unnamedai.domain.repository.DatabaseRepository
+import com.example.unnamedai.domain.use_case.UseCases
 import dagger.Module
+import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
 
-    /*@Provides
+    @Provides
     @Singleton
-    fun providePreferencesDataStore(@ApplicationContext appContext: Context): DataStore<Preferences> =
-        PreferenceDataStoreFactory.create(
-            produceFile = {
-                appContext.preferencesDataStoreFile("settings")
-            }
-        )
+    fun provideDatabaseRepository(dp: UnnamedAiDatabase): DatabaseRepository {
+        return DatabaseRepositoryImp(dp.unnamedAiDao)
+    }
 
     @Provides
     @Singleton
-    fun provideBookDatabase(app: Application): BookDatabase {
+    fun provideBookDatabase(app: Application): UnnamedAiDatabase {
         return Room.databaseBuilder(
             app,
-            BookDatabase::class.java,
-            BookDatabase.Database_Name
+            UnnamedAiDatabase::class.java,
+            UnnamedAiDatabase.Database_Name
         ).build()
     }
 
     @Provides
     @Singleton
     fun provideUseCases(
-        dataStore: DataStore<Preferences>,
-        repository: Repository,
+        databaseRepository: DatabaseRepository,
         @ApplicationContext context: Context
     ) = UseCases(
-        getDataStoreItem = GetDataStoreItem(dataStore),
-        setDataStoreItem = SetDataStoreItem(dataStore),
-        updateAndGetBooks = UpdateAndGetBooks(repository, dataStore, context),
-        getAllBooks = GetAllBooks(repository),
-        getBookById = GetBookById(repository),
-        updateBookById = UpdateBookById(repository)
+        x = 3
+        //getDataStoreItem = GetDataStoreItem(dataStore),
     )
-
-    @Provides
-    @Singleton
-    fun provideRepository(dp: BookDatabase): Repository {
-        return RepositoryImp(dp.bookDao)
-    }
-
-    @Singleton
-    @Provides
-    fun provideMusicServiceConnection(
-        @ApplicationContext context: Context
-    ) = MusicServiceConnection(
-        context
-    )
-    @Singleton
-    @Provides
-    fun provideGlideInstance(
-        @ApplicationContext context: Context
-    ) = Glide.with(context).setDefaultRequestOptions(
-        RequestOptions()
-            .placeholder(R.drawable.ic_image)
-            .error(R.drawable.ic_image)
-            .diskCacheStrategy(DiskCacheStrategy.DATA)
-    )*/
 }

@@ -1,6 +1,7 @@
 package com.example.unnamedai.data.local
 
 import androidx.room.Database
+import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.example.unnamedai.domain.model.Conversation
 import com.google.gson.Gson
@@ -13,7 +14,7 @@ import com.google.gson.reflect.TypeToken
 )
 
 @TypeConverters(Converters::class)
-abstract class UnnamedAiDatabase {
+abstract class UnnamedAiDatabase: RoomDatabase() {
     abstract val unnamedAiDao: UnnamedAiDao
 
     companion object {
