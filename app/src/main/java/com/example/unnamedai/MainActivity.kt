@@ -30,6 +30,8 @@ import com.example.unnamedai.ui.ChatScreen.ChatScreen
 import com.example.unnamedai.ui.HistoryScreen.HistoryScreen
 import com.example.unnamedai.ui.StartScreen
 
+
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
