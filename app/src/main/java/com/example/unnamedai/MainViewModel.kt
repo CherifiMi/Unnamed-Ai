@@ -1,26 +1,23 @@
 package com.example.unnamedai
 
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.unnamedai.domain.model.Conversation
+import com.example.unnamedai.domain.model.From
 import com.example.unnamedai.domain.model.Msg
 import com.example.unnamedai.domain.use_case.UseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 
-
-
-//delete from history **
-// convorsation from history **
-
-
 sealed class MainEvents {
-    object SwipeSplachScreen : MainEvents()
+    object SwipeSplashScreen : MainEvents()
 
     object ClickWelcome : MainEvents()
 
@@ -30,27 +27,27 @@ sealed class MainEvents {
 
     object ClickStartNewChat : MainEvents()
     object ClickGoToHistory : MainEvents()
-    object ClickBacFromHistory : MainEvents()
-    data class DeleteConversationFromHistory(val id: Int): MainEvents()
-    data class SelectConversationFromHistory(val id: Int): MainEvents()
+    object ClickBacKFromHistory : MainEvents()
+    data class DeleteConversationFromHistory(val id: Int) : MainEvents()
+    data class SelectConversationFromHistory(val id: Int) : MainEvents()
 }
 
 data class MainState(
     //main
-    val showChatScreen: MutableState<Boolean> = mutableStateOf(false),
-    val showHistoryScreen: MutableState<Boolean> = mutableStateOf(false),
+    val showChatScreen: Boolean = false,
+    val showHistoryScreen: Boolean = false,
     //start,
-    var wlcVisibility: MutableState<Boolean> = mutableStateOf(false),
-    var setterVisibility: MutableState<Boolean> = mutableStateOf(false),
+    var wlcVisibility: Boolean = false,
+    var setterVisibility: Boolean = false,
     //text fields,
-    var youTF: MutableState<String> = mutableStateOf(""),
-    var youWhoTF: MutableState<String> = mutableStateOf(""),
-    var themTF: MutableState<String> = mutableStateOf(""),
-    var themWhoTF: MutableState<String> = mutableStateOf(""),
+    var youTF: String = "",
+    var youWhoTF: String = "",
+    var themTF: String = "",
+    var themWhoTF: String = "",
     //chat,
-    var chatTF: MutableState<String> = mutableStateOf(""),
+    var chatTF: String = "",
     //data
-    val currentConversation: SnapshotStateList<Msg> = mutableStateListOf(),
+    val currentConversation: MutableList<Msg> = mutableListOf(),
     var history: List<Conversation> = listOf(),
 )
 
@@ -58,16 +55,72 @@ data class MainState(
 class MainViewModel @Inject constructor(
     private val useCases: UseCases
 ) : ViewModel() {
+
+
     private val _state = mutableStateOf(MainState())
     val state: State<MainState> = _state
 
-    //_state.value = state.value.copy
 
     fun onEvent(event: MainEvents) {
         when (event) {
-            else -> {
-                event
+            MainEvents.SwipeSplashScreen -> _state.value = state.value.copy(wlcVisibility = true)
+
+            MainEvents.ClickWelcome -> _state.value =
+                state.value.copy(setterVisibility = true, wlcVisibility = false)
+
+            MainEvents.ClickChatSetter -> {
+                if (
+                    state.value.youTF.isBlank() &&
+                    state.value.youWhoTF.isBlank() &&
+                    state.value.themTF.isBlank() &&
+                    state.value.themWhoTF.isBlank()
+                ) {
+                    // show taost
+                    return
+                }
+
+                _state.value = state.value.copy(setterVisibility = false, showChatScreen = true)
+
             }
+
+            MainEvents.PressDoneOnKeyboard -> {
+                val content = state.value.chatTF
+
+
+
+
+                _state.value =
+                    state.value.copy(
+                        currentConversation = state.value.currentConversation
+                            .apply { this.add(Msg(From.You, content)) },
+                        chatTF = ""
+                    )
+
+
+                viewModelScope.launch {
+
+                    val aiRespond = useCases.askChatGBT(content)
+
+                    delay(1000)
+
+                    withContext(Dispatchers.Main) {
+                        _state.value =
+                            state.value.copy(
+                                currentConversation = state.value.currentConversation
+                                    .apply { this.add(Msg(From.YourAi, aiRespond)) },
+                            )
+                    }
+                }
+
+                //show chatgbt respond
+
+            }
+
+            MainEvents.ClickBacKFromHistory -> TODO()
+            MainEvents.ClickGoToHistory -> TODO()
+            MainEvents.ClickStartNewChat -> TODO()
+            is MainEvents.DeleteConversationFromHistory -> TODO()
+            is MainEvents.SelectConversationFromHistory -> TODO()
         }
     }
 }
