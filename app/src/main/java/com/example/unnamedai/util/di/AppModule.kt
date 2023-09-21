@@ -9,6 +9,10 @@ import com.example.unnamedai.data.remote.ApiRepositoryImp
 import com.example.unnamedai.domain.repository.ApiRepository
 import com.example.unnamedai.domain.repository.DatabaseRepository
 import com.example.unnamedai.domain.use_case.UseCases
+import com.example.unnamedai.domain.use_case.local.DeleteConversation
+import com.example.unnamedai.domain.use_case.local.GetAllConversation
+import com.example.unnamedai.domain.use_case.local.SaveConversation
+import com.example.unnamedai.domain.use_case.remote.AskChatGBT
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -46,9 +50,12 @@ object AppModule {
     @Singleton
     fun provideUseCases(
         databaseRepository: DatabaseRepository,
+        apiRepository: ApiRepository,
         @ApplicationContext context: Context
     ) = UseCases(
-        x = 3
-        //getDataStoreItem = GetDataStoreItem(dataStore),
+        getAllConversation = GetAllConversation(databaseRepository),
+        saveConversation = SaveConversation(databaseRepository),
+        deleteConversation = DeleteConversation(databaseRepository),
+        askChatGBT = AskChatGBT(apiRepository),
     )
 }
