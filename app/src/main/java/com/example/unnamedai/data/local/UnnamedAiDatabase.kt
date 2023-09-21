@@ -2,8 +2,10 @@ package com.example.unnamedai.data.local
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverter
 import androidx.room.TypeConverters
 import com.example.unnamedai.domain.model.Conversation
+import com.example.unnamedai.domain.model.Msg
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
@@ -23,16 +25,16 @@ abstract class UnnamedAiDatabase: RoomDatabase() {
 }
 
 class Converters {
-    /*@TypeConverter
-    fun fromTimestamp(timestamp: List<Timestamp?>): String {
-        return Gson().toJson(timestamp)
+
+    @TypeConverter
+    fun fromMsg(msg: List<Msg?>): String{
+        return Gson().toJson(msg)
     }
 
     @TypeConverter
-    fun toTimestamp(json: String): List<Timestamp?> {
-        return Gson().fromJson<List<Timestamp?>>(json)
-    }*/
+    fun toMsg(json: String): List<Msg?> {
+        return Gson().fromJson<List<Msg?>>(json)
+    }
 }
 
-inline fun <reified T> Gson.fromJson(json: String) =
-    fromJson<T>(json, object : TypeToken<T>() {}.type)
+inline fun <reified T> Gson.fromJson(json: String) = fromJson<T>(json, object : TypeToken<T>() {}.type)
