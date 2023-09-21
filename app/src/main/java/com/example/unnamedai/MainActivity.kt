@@ -24,8 +24,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.unnamedai.theme.Blue
-import com.example.unnamedai.theme.UnnamedAiTheme
+import com.example.unnamedai.util.theme.Blue
+import com.example.unnamedai.util.theme.UnnamedAiTheme
 import com.example.unnamedai.ui.ChatScreen.ChatScreen
 import com.example.unnamedai.ui.HistoryScreen.HistoryScreen
 import com.example.unnamedai.ui.StartScreen

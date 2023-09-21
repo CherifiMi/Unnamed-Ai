@@ -21,13 +21,16 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.unnamedai.*
 import com.example.unnamedai.showChatScreen
-import com.example.unnamedai.theme.Black
-import com.example.unnamedai.theme.Border
-import com.example.unnamedai.theme.Grey
-import com.example.unnamedai.theme.Input
-import com.example.unnamedai.theme.abel
+import com.example.unnamedai.themTF
+import com.example.unnamedai.themWhoTF
+import com.example.unnamedai.util.theme.Black
+import com.example.unnamedai.util.theme.Border
+import com.example.unnamedai.util.theme.Grey
+import com.example.unnamedai.util.theme.Input
+import com.example.unnamedai.util.theme.abel
+import com.example.unnamedai.youTF
+import com.example.unnamedai.youWhoTF
 
 
 @Composable

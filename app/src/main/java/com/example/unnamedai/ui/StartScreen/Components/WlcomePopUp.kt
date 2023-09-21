@@ -24,7 +24,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.unnamedai.R
 import com.example.unnamedai.setterVisibility
-import com.example.unnamedai.theme.*
+import com.example.unnamedai.util.theme.Black
+import com.example.unnamedai.util.theme.Blue
+import com.example.unnamedai.util.theme.Grey
+import com.example.unnamedai.util.theme.White
+import com.example.unnamedai.util.theme.abel
 
 @Composable
 fun WelcomePopUp(modifier: Modifier = Modifier) {

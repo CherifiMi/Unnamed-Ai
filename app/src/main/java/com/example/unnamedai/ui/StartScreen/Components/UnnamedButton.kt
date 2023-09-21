@@ -14,9 +14,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.unnamedai.theme.Black
-import com.example.unnamedai.theme.White
-import com.example.unnamedai.theme.abel
+import com.example.unnamedai.util.theme.Black
+import com.example.unnamedai.util.theme.White
+import com.example.unnamedai.util.theme.abel
 
 @Composable
 fun UnnamedButton(modifier: Modifier = Modifier, text: String, click : () -> Unit) {
@@ -38,6 +38,5 @@ fun UnnamedButton(modifier: Modifier = Modifier, text: String, click : () -> Uni
             fontSize = 20.sp,
             color = White,
         )
-
     }
 }

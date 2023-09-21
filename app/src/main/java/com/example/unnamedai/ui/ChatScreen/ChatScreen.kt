@@ -2,7 +2,6 @@ package com.example.unnamedai.ui.ChatScreen
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.expandIn
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkOut
@@ -23,14 +22,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
@@ -47,10 +43,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
@@ -63,12 +56,11 @@ import com.example.unnamedai.chatTF
 import com.example.unnamedai.currentConvo
 import com.example.unnamedai.showHistoryScreen
 import com.example.unnamedai.themTF
-import com.example.unnamedai.theme.Black
-import com.example.unnamedai.theme.Blue
-import com.example.unnamedai.theme.Input
-import com.example.unnamedai.theme.Red
-import com.example.unnamedai.theme.White
-import com.example.unnamedai.theme.abel
+import com.example.unnamedai.util.theme.Black
+import com.example.unnamedai.util.theme.Blue
+import com.example.unnamedai.util.theme.Input
+import com.example.unnamedai.util.theme.White
+import com.example.unnamedai.util.theme.abel
 import com.example.unnamedai.youTF
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
