@@ -23,7 +23,6 @@ import com.example.unnamedai.ui.StartScreen
 import com.example.unnamedai.util.theme.UnnamedAiTheme
 import dagger.hilt.android.AndroidEntryPoint
 
-//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
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
