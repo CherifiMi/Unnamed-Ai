@@ -109,7 +109,7 @@ class MainViewModel @Inject constructor(
                     )
 
                 viewModelScope.launch(Dispatchers.Main) {
-                    val aiRespond = withContext(Dispatchers.Default) {
+                    val aiRespond = withContext(Dispatchers.IO) {
                         useCases.askChatGBT(content)
                     }
 

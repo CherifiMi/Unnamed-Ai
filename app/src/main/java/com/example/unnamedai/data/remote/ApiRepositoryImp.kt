@@ -9,20 +9,16 @@ class ApiRepositoryImp(private val caravanApi: UnnamedAiApi) : ApiRepository {
         val chatRequest = ChatRequest(
             model = "gpt-3.5-turbo",
             messages = listOf(
-                Message(role = "user", content = "What is the OpenAI mission?")
+                Message(role = "user", content = question)
             )
         )
 
-        val response = caravanApi.askChat(
+        val response = caravanApi.askChat2(
             authorization = "Bearer $OPEN_AI_API_KEY",
             request = chatRequest
-        ).execute()
+        )
 
-        return if (response.isSuccessful) {
-            val chatResponse = response.body()
-            chatResponse!!.choices.last().message.content
-        } else {
-            "not working"
-        }
+
+        return response.body()?.choices?.last()?.message?.content ?: "sorry no data"
     }
 }
