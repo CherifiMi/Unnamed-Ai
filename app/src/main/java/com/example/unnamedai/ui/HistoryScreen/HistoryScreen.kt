@@ -30,7 +30,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.unnamedai.MainEvents
 import com.example.unnamedai.MainViewModel
 import com.example.unnamedai.R
-import com.example.unnamedai.history
 import com.example.unnamedai.util.theme.Black
 import com.example.unnamedai.util.theme.Input
 import com.example.unnamedai.util.theme.White
@@ -104,7 +103,7 @@ fun HistoryScreen(viewmodel: MainViewModel = hiltViewModel()) {
         )
 
         LazyColumn(Modifier.fillMaxSize()) {
-            items(history) {
+            items(state.history) {
                 Column(Modifier.fillMaxSize()) {
                     Box(
                         modifier = Modifier
@@ -136,7 +135,7 @@ fun HistoryScreen(viewmodel: MainViewModel = hiltViewModel()) {
 
                     Text(
                         modifier = Modifier.padding(start = 24.dp),
-                        text = it.you + " & " + it.them,
+                        text = it.name + " & " + it.aiName,
                         fontFamily = abel,
                         fontSize = 18.sp,
                         lineHeight = 22.sp,

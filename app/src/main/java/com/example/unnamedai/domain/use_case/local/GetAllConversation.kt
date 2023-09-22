@@ -6,7 +6,7 @@ import com.example.unnamedai.domain.repository.DatabaseRepository
 class GetAllConversation (
     private val databaseRepository: DatabaseRepository
 ) {
-    operator fun invoke(): List<Conversation>{
+    suspend operator fun invoke(): List<Conversation>{
         return databaseRepository.getAllConversation()
     }
 }

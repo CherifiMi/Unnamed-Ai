@@ -13,7 +13,7 @@ class DatabaseRepositoryImp(private val dao: UnnamedAiDao):DatabaseRepository {
         dao.deleteConversation(id)
     }
 
-    override fun getAllConversation(): List<Conversation> {
+    override suspend fun getAllConversation(): List<Conversation> {
         return dao.getAllConversation() ?: emptyList()
     }
 }

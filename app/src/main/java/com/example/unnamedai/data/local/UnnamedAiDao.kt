@@ -10,7 +10,7 @@ import com.example.unnamedai.domain.model.Conversation
 interface UnnamedAiDao {
 
     @Query("SELECT * FROM conversations")
-    fun getAllConversation(): List<Conversation>?
+    suspend fun getAllConversation(): List<Conversation>?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun saveConversation(conv: Conversation)
