@@ -16,6 +16,6 @@ interface UnnamedAiDao {
     suspend fun saveConversation(conv: Conversation)
 
     @Query("DELETE FROM conversations WHERE id = :id")
-    fun deleteConversation(id: Int)
+    suspend fun deleteConversation(id: Int)
 
 }

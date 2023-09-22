@@ -110,7 +110,7 @@ class MainViewModel @Inject constructor(
                     )
                 )
 
-                // TODO: set the chatgpt 
+                // TODO: set the chatgpt
 
 
                 viewModelScope.launch {
@@ -179,7 +179,17 @@ class MainViewModel @Inject constructor(
                 chatTF = "",
             )
 
-            is MainEvents.DeleteConversationFromHistory -> useCases.deleteConversation(event.id) // TODO: update history
+            is MainEvents.DeleteConversationFromHistory -> {
+                viewModelScope.launch(Dispatchers.Main) {
+                    val dbData = withContext(Dispatchers.IO) {
+                        useCases.deleteConversation(event.id)
+                        useCases.getAllConversation()
+                    }
+
+                    _state.value = state.value.copy(history = dbData)
+                }
+                // TODO: update history
+            }
             is MainEvents.SelectConversationFromHistory -> _state.value = state.value.copy(
                 currentConversation = event.conversation,
                 showHistoryScreen = false

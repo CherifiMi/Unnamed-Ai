@@ -4,6 +4,6 @@ import com.example.unnamedai.domain.model.Conversation
 
 interface DatabaseRepository{
     suspend fun saveConversation(conv: Conversation)
-    fun deleteConversation(id: Int)
+    suspend fun deleteConversation(id: Int)
     suspend fun getAllConversation(): List<Conversation>
 }

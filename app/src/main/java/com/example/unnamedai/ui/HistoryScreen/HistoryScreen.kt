@@ -1,6 +1,5 @@
 package com.example.unnamedai.ui.HistoryScreen
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -84,7 +83,7 @@ fun HistoryScreen(viewmodel: MainViewModel = hiltViewModel()) {
                 .fillMaxWidth()
                 .height(56.dp)
                 .clickable {
-                           viewmodel.onEvent(MainEvents.ClickStartNewChat)
+                    viewmodel.onEvent(MainEvents.ClickStartNewChat)
                 },
             contentAlignment = Alignment.Center
         ) {
@@ -108,7 +107,10 @@ fun HistoryScreen(viewmodel: MainViewModel = hiltViewModel()) {
 
         LazyColumn(Modifier.fillMaxSize()) {
             items(state.history) {
-                Column(Modifier.fillMaxSize().clickable { viewmodel.onEvent(MainEvents.SelectConversationFromHistory(it)) }) {
+                Column(
+                    Modifier
+                        .fillMaxSize()
+                        .clickable { viewmodel.onEvent(MainEvents.SelectConversationFromHistory(it)) }) {
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
@@ -128,13 +130,15 @@ fun HistoryScreen(viewmodel: MainViewModel = hiltViewModel()) {
                             lineHeight = 21.sp,
                             color = White,
                         )
-                        Image(
-                            modifier = Modifier
-                                .padding(end = 24.dp)
-                                .alpha(.5f),
-                            painter = painterResource(id = R.drawable.more),
-                            contentDescription = null
-                        )
+                        IconButton(onClick = { viewmodel.onEvent(MainEvents.DeleteConversationFromHistory(it.id!!)) }) {
+                            Icon(
+                                modifier = Modifier
+                                    .padding(end = 24.dp)
+                                    .alpha(.5f),
+                                painter = painterResource(id = R.drawable.more),
+                                contentDescription = null
+                            )
+                        }
                     }
 
                     Text(

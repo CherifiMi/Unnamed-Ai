@@ -9,7 +9,7 @@ class DatabaseRepositoryImp(private val dao: UnnamedAiDao):DatabaseRepository {
         dao.saveConversation(conv)
     }
 
-    override fun deleteConversation(id: Int) {
+    override suspend fun deleteConversation(id: Int) {
         dao.deleteConversation(id)
     }
 
