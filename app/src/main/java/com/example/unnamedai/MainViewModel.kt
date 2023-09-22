@@ -31,7 +31,7 @@ sealed class MainEvents {
     object ClickGoToHistory : MainEvents()
     object ClickBacKFromHistory : MainEvents()
     data class DeleteConversationFromHistory(val id: Int) : MainEvents()
-    data class SelectConversationFromHistory(val id: Int) : MainEvents()
+    data class SelectConversationFromHistory(val conversation: Conversation) : MainEvents()
 }
 
 data class MainState(
@@ -57,7 +57,6 @@ data class MainState(
 class MainViewModel @Inject constructor(
     private val useCases: UseCases
 ) : ViewModel() {
-
 
     private val _state = mutableStateOf(MainState())
     val state: State<MainState> = _state
@@ -94,9 +93,6 @@ class MainViewModel @Inject constructor(
             MainEvents.PressDoneOnKeyboard -> {
                 val content = state.value.chatTF
 
-
-
-
                 _state.value =
                     state.value.copy(
                         currentConversation = state.value.currentConversation
@@ -115,17 +111,41 @@ class MainViewModel @Inject constructor(
                         _state.value =
                             state.value.copy(
                                 currentConversation = state.value.currentConversation
-                                    .apply { this.add(Msg(From.YourAi, aiRespond)) },
+                                    .apply { add(Msg(From.YourAi, aiRespond)) },
                             )
+
                     }
+
+                    // TODO: every time chatgpt responds, save convo to db
+
                 }
             }
 
-            MainEvents.ClickBacKFromHistory -> TODO()
-            MainEvents.ClickGoToHistory -> TODO()
-            MainEvents.ClickStartNewChat -> TODO()
-            is MainEvents.DeleteConversationFromHistory -> TODO()
-            is MainEvents.SelectConversationFromHistory -> TODO()
+            MainEvents.ClickGoToHistory -> _state.value = state.value.copy(showHistoryScreen = true) //TODO: update history
+            MainEvents.ClickBacKFromHistory -> state.value.copy(showHistoryScreen = false)
+            MainEvents.ClickStartNewChat -> state.value.copy(
+                setterVisibility = true,
+                showHistoryScreen = false,
+                showChatScreen = false,
+                wlcVisibility = false,
+                youTF = "",
+                youWhoTF = "",
+                themTF = "",
+                themWhoTF = "",
+                chatTF = "",
+                currentConversation = mutableListOf(),
+            )
+
+            is MainEvents.DeleteConversationFromHistory -> useCases.deleteConversation(event.id) // TODO: update history
+            is MainEvents.SelectConversationFromHistory -> state.value.copy(
+                currentConversation =
+                mutableListOf<Msg>().apply {
+                    addAll(
+                        event.conversation.talk
+                    )
+                },
+                showHistoryScreen = false
+            )
         }
     }
 }
