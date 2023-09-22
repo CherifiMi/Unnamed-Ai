@@ -1,25 +1,6 @@
 package com.example.unnamedai
 
-/*//main
-val showChatScreen = mutableStateOf(false)
-val showHistoryScreen = mutableStateOf(false)
 
-//start
-var wlcVisibility = mutableStateOf(false)
-var setterVisibility = mutableStateOf(false)
-
-
-//text fields
-var youTF = mutableStateOf("")
-var youWhoTF = mutableStateOf("")
-var themTF = mutableStateOf("")
-var themWhoTF = mutableStateOf("")
-
-var chatTF = mutableStateOf("")
-
-
-//mock data
-val currentConvo = mutableStateListOf<Message>()*/
 
 
 var history = listOf(

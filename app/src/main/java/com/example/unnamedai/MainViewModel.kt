@@ -78,9 +78,9 @@ class MainViewModel @Inject constructor(
 
             is MainEvents.ClickChatSetter -> {
                 if (
-                    state.value.youTF.isBlank() &&
-                    state.value.youWhoTF.isBlank() &&
-                    state.value.themTF.isBlank() &&
+                    state.value.youTF.isBlank() ||
+                    state.value.youWhoTF.isBlank() ||
+                    state.value.themTF.isBlank() ||
                     state.value.themWhoTF.isBlank()
                 ) {
 
