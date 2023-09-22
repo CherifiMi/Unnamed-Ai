@@ -6,7 +6,7 @@ import com.example.unnamedai.domain.repository.DatabaseRepository
 class SaveConversation(
     private val databaseRepository: DatabaseRepository
 ) {
-    operator fun invoke(conv: Conversation){
+    suspend operator fun invoke(conv: Conversation){
         return databaseRepository.saveConversation(conv)
     }
 }

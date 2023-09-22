@@ -110,6 +110,13 @@ class MainViewModel @Inject constructor(
                     )
                 )
 
+                //set the chat
+
+                // save conve to db
+                viewModelScope.launch {
+                    useCases.saveConversation(state.value.currentConversation!!)
+                }
+
             }
 
             MainEvents.PressDoneOnKeyboard -> {
@@ -125,7 +132,7 @@ class MainViewModel @Inject constructor(
 
                 viewModelScope.launch(Dispatchers.Main) {
                     val aiRespond = withContext(Dispatchers.IO) {
-                        useCases.askChatGBT(content)
+                        useCases.askChatGBT(content, state.value.currentConversation!!.talk)
                     }
 
                     _state.value =

@@ -5,7 +5,7 @@ import com.example.unnamedai.domain.repository.DatabaseRepository
 
 class DatabaseRepositoryImp(private val dao: UnnamedAiDao):DatabaseRepository {
 
-    override fun saveConversation(conv: Conversation) {
+    override suspend fun saveConversation(conv: Conversation) {
         dao.saveConversation(conv)
     }
 

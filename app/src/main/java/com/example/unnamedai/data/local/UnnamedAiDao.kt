@@ -13,7 +13,7 @@ interface UnnamedAiDao {
     fun getAllConversation(): List<Conversation>?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun saveConversation(conv: Conversation)
+    suspend fun saveConversation(conv: Conversation)
 
     @Query("DELETE FROM conversations WHERE id = :id")
     fun deleteConversation(id: Int)
