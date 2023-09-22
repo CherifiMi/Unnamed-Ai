@@ -2,8 +2,14 @@ package com.example.unnamedai.data.remote
 
 import com.example.unnamedai.domain.repository.ApiRepository
 
-class ApiRepositoryImp(): ApiRepository {
+class ApiRepositoryImp(private val caravanApi: UnnamedAiApi): ApiRepository {
     override suspend fun askChatGBT(question: String): String {
-        return "chat gpt respond"
+
+
+        //caravanApi.chatgbt()
+
+
+
+        return "$question  $question  $question  $question  $question"
     }
 }
