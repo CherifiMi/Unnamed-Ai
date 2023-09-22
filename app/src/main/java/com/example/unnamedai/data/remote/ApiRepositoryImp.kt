@@ -7,7 +7,7 @@ class ApiRepositoryImp(private val caravanApi: UnnamedAiApi) : ApiRepository {
     override suspend fun askChatGBT(question: String): String {
 
         val chatRequest = ChatRequest(
-            model = "gpt-3.5-turbo",
+            model = "gpt-4"/*"gpt-3.5-turbo"*/,
             messages = listOf(
                 Message(role = "user", content = question)
             )
