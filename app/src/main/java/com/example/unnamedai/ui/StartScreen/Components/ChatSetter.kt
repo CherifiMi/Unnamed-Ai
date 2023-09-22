@@ -14,27 +14,28 @@ import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.unnamedai.showChatScreen
-import com.example.unnamedai.themTF
-import com.example.unnamedai.themWhoTF
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.unnamedai.MainEvents
+import com.example.unnamedai.MainViewModel
 import com.example.unnamedai.util.theme.Black
 import com.example.unnamedai.util.theme.Border
 import com.example.unnamedai.util.theme.Grey
 import com.example.unnamedai.util.theme.Input
 import com.example.unnamedai.util.theme.abel
-import com.example.unnamedai.youTF
-import com.example.unnamedai.youWhoTF
 
 
 @Composable
-fun ChatSetter(modifier: Modifier = Modifier) {
+fun ChatSetter(modifier: Modifier = Modifier, viewmodel: MainViewModel = hiltViewModel()) {
+
+    val state = viewmodel.state.value
+    val context = LocalContext.current
 
     Column(
         modifier
@@ -69,16 +70,24 @@ fun ChatSetter(modifier: Modifier = Modifier) {
             color = Black,
         )
 
-        UnnamedTextField(placeholder = "Enter your name/alias", value = youTF)
-        UnnamedTextField(placeholder = "Enter some information about yourself.", value = youWhoTF)
+        UnnamedTextField(placeholder = "Enter your name/alias", value = state.youTF){
+            viewmodel.onEvent(MainEvents.YouTfChanged(it))
+        }
+        UnnamedTextField(placeholder = "Enter some information about yourself.", value = state.youWhoTF){
+            viewmodel.onEvent(MainEvents.YouWhoTfChanged(it))
+        }
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        UnnamedTextField(placeholder = "Enter the name of  “Your Ai”.", value = themTF)
-        UnnamedTextField(placeholder = "Enter some information about “Your Ai”", value = themWhoTF)
+        UnnamedTextField(placeholder = "Enter the name of  “Your Ai”.", value = state.themTF){
+            viewmodel.onEvent(MainEvents.ThemTfChanged(it))
+        }
+        UnnamedTextField(placeholder = "Enter some information about “Your Ai”", value = state.themWhoTF){
+            viewmodel.onEvent(MainEvents.ThemWhoTfChanged(it))
+        }
 
         UnnamedButton(text = "Start Chat") {
-            showChatScreen.value = true
+            viewmodel.onEvent(MainEvents.ClickChatSetter(context))
         }
 
 
@@ -89,14 +98,15 @@ fun ChatSetter(modifier: Modifier = Modifier) {
 fun UnnamedTextField(
     modifier: Modifier = Modifier,
     placeholder: String,
-    value: MutableState<String>
+    value: String,
+    onChanged: (it: String) -> Unit
 ) {
     OutlinedTextField(
         modifier = modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp, horizontal = 20.dp),
-        value = value.value,
-        onValueChange = { value.value = it },
+        value = value,
+        onValueChange = { onChanged(it) },
         placeholder = {
             Text(
                 text = placeholder,

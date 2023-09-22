@@ -26,16 +26,21 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.unnamedai.MainEvents
+import com.example.unnamedai.MainViewModel
 import com.example.unnamedai.R
 import com.example.unnamedai.history
-import com.example.unnamedai.showHistoryScreen
 import com.example.unnamedai.util.theme.Black
 import com.example.unnamedai.util.theme.Input
 import com.example.unnamedai.util.theme.White
 import com.example.unnamedai.util.theme.abel
 
 @Composable
-fun HistoryScreen() {
+fun HistoryScreen(viewmodel: MainViewModel = hiltViewModel()) {
+
+    val state = viewmodel.state.value
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -56,7 +61,7 @@ fun HistoryScreen() {
                 modifier = Modifier
                     .clip(RoundedCornerShape(100)),
                 onClick = {
-                    showHistoryScreen.value = false
+                    viewmodel.onEvent(MainEvents.ClickBacKFromHistory)
                 }
             ) {
                 Icon(
@@ -121,7 +126,9 @@ fun HistoryScreen() {
                             color = White,
                         )
                         Image(
-                            modifier = Modifier.padding(end = 24.dp).alpha(.5f),
+                            modifier = Modifier
+                                .padding(end = 24.dp)
+                                .alpha(.5f),
                             painter = painterResource(id = R.drawable.more),
                             contentDescription = null
                         )
