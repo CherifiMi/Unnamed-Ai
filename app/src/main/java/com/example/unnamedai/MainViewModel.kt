@@ -142,10 +142,12 @@ class MainViewModel @Inject constructor(
                             loadingChatRespond = false
                         )
 
+                    withContext(Dispatchers.IO) {
+                        useCases.saveConversation(state.value.currentConversation!!)
+                    }
                 }
 
 
-                // TODO: every time chatgpt responds, save convo to db
             }
 
             MainEvents.ClickGoToHistory -> _state.value =
