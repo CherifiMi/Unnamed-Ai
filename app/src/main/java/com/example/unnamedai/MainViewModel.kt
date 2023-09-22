@@ -136,7 +136,7 @@ class MainViewModel @Inject constructor(
                             content,
                             state.value.currentConversation!!.talk,
                             state.value.currentConversation!!.let {
-                                "your name is ${it.aiName} and you are a ${it.infoAboutAi}," +
+                                "act like ${it.aiName}, a ${it.infoAboutAi}." +
                                         " my name is ${it.name} and I am a ${it.infoAboutYou}"
                             }
                         )
