@@ -5,7 +5,6 @@ import android.widget.Toast
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.example.unnamedai.domain.model.Conversation
 import com.example.unnamedai.domain.model.From
 import com.example.unnamedai.domain.model.Msg
@@ -13,8 +12,7 @@ import com.example.unnamedai.domain.use_case.UseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 
@@ -42,6 +40,7 @@ sealed class MainEvents {
 }
 
 data class MainState(
+    val loadingChatRespond: Boolean = false,
     //main
     val showChatScreen: Boolean = false,
     val showHistoryScreen: Boolean = false,
@@ -104,32 +103,29 @@ class MainViewModel @Inject constructor(
                     state.value.copy(
                         currentConversation = state.value.currentConversation
                             .apply { this.add(Msg(From.You, content)) },
-                        chatTF = ""
+                        chatTF = "",
+                        loadingChatRespond = true
                     )
 
-
-                viewModelScope.launch {
-
-                    val aiRespond = useCases.askChatGBT(content)
-
+                val aiRespond = runBlocking(Dispatchers.IO) {
                     delay(1000)
-
-                    withContext(Dispatchers.Main) {
-                        _state.value =
-                            state.value.copy(
-                                currentConversation = state.value.currentConversation
-                                    .apply { add(Msg(From.YourAi, aiRespond)) },
-                            )
-
-                    }
-
-                    // TODO: every time chatgpt responds, save convo to db
-
+                    useCases.askChatGBT(content)
                 }
+
+                _state.value =
+                    state.value.copy(
+                        currentConversation = state.value.currentConversation
+                            .apply { add(Msg(From.YourAi, aiRespond)) },
+                    )
+
+                // TODO: every time chatgpt responds, save convo to db
             }
 
-            MainEvents.ClickGoToHistory -> _state.value = state.value.copy(showHistoryScreen = true) //TODO: update history
-            MainEvents.ClickBacKFromHistory -> _state.value = state.value.copy(showHistoryScreen = false)
+            MainEvents.ClickGoToHistory -> _state.value =
+                state.value.copy(showHistoryScreen = true) //TODO: update history
+            MainEvents.ClickBacKFromHistory -> _state.value =
+                state.value.copy(showHistoryScreen = false)
+
             MainEvents.ClickStartNewChat -> _state.value = state.value.copy(
                 setterVisibility = true,
                 showHistoryScreen = false,

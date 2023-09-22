@@ -60,6 +60,7 @@ import com.example.unnamedai.util.theme.Black
 import com.example.unnamedai.util.theme.Blue
 import com.example.unnamedai.util.theme.Input
 import com.example.unnamedai.util.theme.White
+import com.example.unnamedai.util.theme.Yellow
 import com.example.unnamedai.util.theme.abel
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -193,6 +194,16 @@ fun ChatScreen(modifier: Modifier = Modifier, viewmodel: MainViewModel = hiltVie
             item {
                 Spacer(modifier = Modifier.height(72.dp))
             }
+
+            item {
+                if (state.loadingChatRespond){
+                    Box(modifier = Modifier
+                        .fillMaxWidth()
+                        .height(60.dp)
+                        .background(Yellow)
+                    )
+                }
+            }
         }
     }
 }
@@ -324,6 +335,4 @@ fun ThemItem(item: Msg, name: String) {
 
         }
     }
-
-
 }
