@@ -1,12 +1,10 @@
 package com.example.unnamedai.ui.StartScreen.Components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
@@ -14,7 +12,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -22,8 +19,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.unnamedai.MainEvents
+import com.example.unnamedai.MainViewModel
 import com.example.unnamedai.R
-import com.example.unnamedai.setterVisibility
 import com.example.unnamedai.util.theme.Black
 import com.example.unnamedai.util.theme.Blue
 import com.example.unnamedai.util.theme.Grey
@@ -31,7 +30,8 @@ import com.example.unnamedai.util.theme.White
 import com.example.unnamedai.util.theme.abel
 
 @Composable
-fun WelcomePopUp(modifier: Modifier = Modifier) {
+fun WelcomePopUp(modifier: Modifier = Modifier, viewmodel: MainViewModel = hiltViewModel()) {
+
     Column(
         modifier
             .wrapContentHeight()
@@ -79,7 +79,7 @@ fun WelcomePopUp(modifier: Modifier = Modifier) {
         )
 
         UnnamedButton(text = "Get Started") {
-            setterVisibility.value = true
+            viewmodel.onEvent(MainEvents.ClickWelcome)
         }
 
         Spacer(modifier = Modifier.size(34.dp))

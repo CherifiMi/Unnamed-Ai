@@ -1,34 +1,33 @@
 package com.example.unnamedai.ui
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectVerticalDragGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
-import com.example.unnamedai.setterVisibility
-import com.example.unnamedai.showChatScreen
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.unnamedai.MainEvents
+import com.example.unnamedai.MainViewModel
 import com.example.unnamedai.ui.StartScreen.Components.ChatSetter
 import com.example.unnamedai.ui.StartScreen.Components.SplachScreen
 import com.example.unnamedai.ui.StartScreen.Components.WelcomePopUp
-import com.example.unnamedai.wlcVisibility
 
 
 @Composable
-fun StartScreen(modifier: Modifier = Modifier) {
+fun StartScreen(modifier: Modifier = Modifier, viewmodel: MainViewModel = hiltViewModel()) {
 
+    val state = viewmodel.state.value
 
     Box(modifier = Modifier.fillMaxSize()) {
 
@@ -38,7 +37,9 @@ fun StartScreen(modifier: Modifier = Modifier) {
                 Modifier
                     .weight(.7f)
                     .pointerInput(Unit) {
-                        detectVerticalDragGestures(onDragEnd = { wlcVisibility.value = true}) { change, dragAmount -> }
+                        detectVerticalDragGestures(onDragEnd = {
+                            viewmodel.onEvent(MainEvents.SwipeSplashScreen)
+                        }) { change, dragAmount -> }
                     })
 
             AnimatedVisibility(
@@ -48,12 +49,13 @@ fun StartScreen(modifier: Modifier = Modifier) {
                         topEndPercent = 10
                     )
                 ),
-                visible = wlcVisibility.value && !setterVisibility.value,
+                visible = state.wlcVisibility && !state.setterVisibility,
             ) {
 
                 WelcomePopUp(
                     Modifier
-                        .weight(.3f))
+                        .weight(.3f)
+                )
 
             }
         }
@@ -66,7 +68,7 @@ fun StartScreen(modifier: Modifier = Modifier) {
                 with(density) { 300.dp.roundToPx() }
             },
             exit = slideOutVertically() + shrinkVertically() + fadeOut(),
-            visible = setterVisibility.value
+            visible = state.setterVisibility
         ) {
             ChatSetter()
         }

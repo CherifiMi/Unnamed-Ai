@@ -16,13 +16,17 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.unnamedai.MainViewModel
 import com.example.unnamedai.R
 import com.example.unnamedai.util.theme.White
 import com.example.unnamedai.util.theme.abel
-import com.example.unnamedai.wlcVisibility
 
 @Composable
-fun SplachScreen(modifier: Modifier = Modifier) {
+fun SplachScreen(modifier: Modifier = Modifier,viewmodel: MainViewModel = hiltViewModel()) {
+
+    val state = viewmodel.state.value
+
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -32,7 +36,7 @@ fun SplachScreen(modifier: Modifier = Modifier) {
 
         AnimatedVisibility(
             exit = fadeOut(),
-            visible = !wlcVisibility.value, modifier = Modifier
+            visible = !state.wlcVisibility, modifier = Modifier
                 .align(
                     Alignment.BottomCenter
                 )

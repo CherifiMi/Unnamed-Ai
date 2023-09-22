@@ -1,62 +1,166 @@
 package com.example.unnamedai
 
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.unnamedai.domain.model.Conversation
+import com.example.unnamedai.domain.model.From
+import com.example.unnamedai.domain.model.Msg
+import com.example.unnamedai.domain.use_case.UseCases
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
 
-//main
-val showChatScreen = mutableStateOf(false)
-val showHistoryScreen = mutableStateOf(false)
+sealed class MainEvents {
+    object SwipeSplashScreen : MainEvents()
 
-//start
-var wlcVisibility = mutableStateOf(false)
-var setterVisibility = mutableStateOf(false)
+    object ClickWelcome : MainEvents()
 
+    data class ClickChatSetter(val context: Context) : MainEvents()
 
-//text fields
-var youTF = mutableStateOf("")
-var youWhoTF = mutableStateOf("")
-var themTF = mutableStateOf("")
-var themWhoTF = mutableStateOf("")
+    object PressDoneOnKeyboard : MainEvents()
 
-var chatTF = mutableStateOf("")
+    object ClickStartNewChat : MainEvents()
+    object ClickGoToHistory : MainEvents()
+    object ClickBacKFromHistory : MainEvents()
+    data class DeleteConversationFromHistory(val id: Int) : MainEvents()
+    data class SelectConversationFromHistory(val conversation: Conversation) : MainEvents()
 
+    data class ChatTfChanged(val it: String) : MainEvents()
 
-//mock data
-val currentConvo = mutableStateListOf<Message>()
+    data class YouTfChanged(val it: String) : MainEvents()
+    data class YouWhoTfChanged(val it: String) : MainEvents()
+    data class ThemTfChanged(val it: String) : MainEvents()
+    data class ThemWhoTfChanged(val it: String) : MainEvents()
+}
 
-
-var history = listOf(
-    Convo(
-        you = "SuperMario",
-        them = "Bowser",
-        date = "Today",
-        talk = listOf()
-    ),
-    Convo(
-        you = "UsersName",
-        them = "AiName",
-        date = "02 Feb, 2023",
-        talk = listOf()
-    ),
-    Convo(
-        you = "UsersName2",
-        them = "AiName2",
-        date = "10 Feb, 2023",
-        talk = listOf()
-    ),
+data class MainState(
+    val loadingChatRespond: Boolean = false,
+    //main
+    val showChatScreen: Boolean = false,
+    val showHistoryScreen: Boolean = false,
+    //start,
+    var wlcVisibility: Boolean = false,
+    var setterVisibility: Boolean = false,
+    //text fields,
+    var youTF: String = "",
+    var youWhoTF: String = "",
+    var themTF: String = "",
+    var themWhoTF: String = "",
+    //chat,
+    var chatTF: String = "",
+    //data
+    val currentConversation: MutableList<Msg> = mutableListOf(),
+    var history: List<Conversation> = listOf(),
 )
 
+@HiltViewModel
+class MainViewModel @Inject constructor(
+    private val useCases: UseCases
+) : ViewModel() {
 
-data class Convo(
-    val you: String,
-    val them: String,
-    val date: String,
-    val talk: List<Message>,
-)
+    private val _state = mutableStateOf(MainState())
+    val state: State<MainState> = _state
 
-data class Message(
-    val from: String,
-    val content: String
-)
+
+    fun onEvent(event: MainEvents) {
+        when (event) {
+            MainEvents.SwipeSplashScreen -> _state.value = state.value.copy(wlcVisibility = true)
+
+            MainEvents.ClickWelcome -> _state.value =
+                state.value.copy(setterVisibility = true, wlcVisibility = false)
+
+            is MainEvents.ClickChatSetter -> {
+                if (
+                    state.value.youTF.isBlank() ||
+                    state.value.youWhoTF.isBlank() ||
+                    state.value.themTF.isBlank() ||
+                    state.value.themWhoTF.isBlank()
+                ) {
+
+                    Toast.makeText(
+                        event.context,
+                        "Please fill all the fields",
+                        Toast.LENGTH_SHORT
+                    ).show()
+
+                    return
+                }
+
+                _state.value = state.value.copy(setterVisibility = false, showChatScreen = true)
+
+            }
+
+            MainEvents.PressDoneOnKeyboard -> {
+                val content = state.value.chatTF
+
+                _state.value =
+                    state.value.copy(
+                        currentConversation = state.value.currentConversation
+                            .apply { this.add(Msg(From.You, content)) },
+                        chatTF = "",
+                        loadingChatRespond = true
+                    )
+
+                viewModelScope.launch(Dispatchers.Main) {
+                    val aiRespond = withContext(Dispatchers.IO) {
+                        useCases.askChatGBT(content)
+                    }
+
+                    _state.value =
+                        state.value.copy(
+                            currentConversation = state.value.currentConversation
+                                .apply { add(Msg(From.YourAi, aiRespond)) },
+                            loadingChatRespond = false
+                        )
+
+                }
+
+
+                // TODO: every time chatgpt responds, save convo to db
+            }
+
+            MainEvents.ClickGoToHistory -> _state.value =
+                state.value.copy(showHistoryScreen = true) //TODO: update history
+            MainEvents.ClickBacKFromHistory -> _state.value =
+                state.value.copy(showHistoryScreen = false)
+
+            MainEvents.ClickStartNewChat -> _state.value = state.value.copy(
+                setterVisibility = true,
+                showHistoryScreen = false,
+                showChatScreen = false,
+                wlcVisibility = false,
+                youTF = "",
+                youWhoTF = "",
+                themTF = "",
+                themWhoTF = "",
+                chatTF = "",
+                currentConversation = mutableListOf(),
+            )
+
+            is MainEvents.DeleteConversationFromHistory -> useCases.deleteConversation(event.id) // TODO: update history
+            is MainEvents.SelectConversationFromHistory -> _state.value = state.value.copy(
+                currentConversation =
+                mutableListOf<Msg>().apply {
+                    addAll(
+                        event.conversation.talk
+                    )
+                },
+                showHistoryScreen = false
+            )
+
+            is MainEvents.ChatTfChanged -> _state.value = state.value.copy(chatTF = event.it)
+
+            is MainEvents.YouTfChanged -> _state.value = state.value.copy(youTF = event.it)
+            is MainEvents.YouWhoTfChanged -> _state.value = state.value.copy(youWhoTF = event.it)
+            is MainEvents.ThemTfChanged -> _state.value = state.value.copy(themTF = event.it)
+            is MainEvents.ThemWhoTfChanged -> _state.value = state.value.copy(themWhoTF = event.it)
+        }
+    }
+}
