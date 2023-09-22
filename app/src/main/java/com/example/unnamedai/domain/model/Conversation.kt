@@ -11,7 +11,7 @@ data class Conversation(
     val infoAboutYou: String,
     val infoAboutAi: String,
     val date: String,
-    val talk: List<Msg>,
+    val talk: MutableList<Msg>,
 )
 
 data class Msg(

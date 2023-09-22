@@ -167,7 +167,7 @@ fun ChatScreen(modifier: Modifier = Modifier, viewmodel: MainViewModel = hiltVie
             }
 
 
-            items(state.currentConversation.reversed()) {
+            items(state.currentConversation!!.talk.reversed()) {
                 if (it.from == From.You) {
                     YouItem(it, state.youTF)
                 } else {
@@ -178,7 +178,7 @@ fun ChatScreen(modifier: Modifier = Modifier, viewmodel: MainViewModel = hiltVie
 
             item {
                 AnimatedVisibility(
-                    visible = state.currentConversation.size == 0,
+                    visible = state.currentConversation.talk.size == 0,
                     enter = fadeIn(),
                     exit = fadeOut() + shrinkOut()
                 ) {

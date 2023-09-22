@@ -14,6 +14,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 
@@ -56,7 +58,8 @@ data class MainState(
     //chat,
     var chatTF: String = "",
     //data
-    val currentConversation: MutableList<Msg> = mutableListOf(),
+    //val currentConversation: MutableList<Msg> = mutableListOf(),
+    val currentConversation: Conversation? = null,
     var history: List<Conversation> = listOf(),
 )
 
@@ -93,7 +96,19 @@ class MainViewModel @Inject constructor(
                     return
                 }
 
-                _state.value = state.value.copy(setterVisibility = false, showChatScreen = true)
+                _state.value = state.value.copy(
+                    setterVisibility = false,
+                    showChatScreen = true,
+                    currentConversation = Conversation(
+                        id = (0..999999).random(),
+                        name = state.value.youTF,
+                        aiName = state.value.themTF,
+                        infoAboutYou = state.value.youWhoTF,
+                        infoAboutAi = state.value.themWhoTF,
+                        date = getCurrentDate(),
+                        talk = mutableListOf()
+                    )
+                )
 
             }
 
@@ -103,7 +118,7 @@ class MainViewModel @Inject constructor(
                 _state.value =
                     state.value.copy(
                         currentConversation = state.value.currentConversation
-                            .apply { this.add(Msg(From.You, content)) },
+                            .apply { this!!.talk.add(Msg(From.You, content)) },
                         chatTF = "",
                         loadingChatRespond = true
                     )
@@ -116,7 +131,7 @@ class MainViewModel @Inject constructor(
                     _state.value =
                         state.value.copy(
                             currentConversation = state.value.currentConversation
-                                .apply { add(Msg(From.YourAi, aiRespond)) },
+                                .apply { this!!.talk.add(Msg(From.YourAi, aiRespond)) },
                             loadingChatRespond = false
                         )
 
@@ -136,22 +151,17 @@ class MainViewModel @Inject constructor(
                 showHistoryScreen = false,
                 showChatScreen = false,
                 wlcVisibility = false,
+                currentConversation = null,
                 youTF = "",
                 youWhoTF = "",
                 themTF = "",
                 themWhoTF = "",
                 chatTF = "",
-                currentConversation = mutableListOf(),
             )
 
             is MainEvents.DeleteConversationFromHistory -> useCases.deleteConversation(event.id) // TODO: update history
             is MainEvents.SelectConversationFromHistory -> _state.value = state.value.copy(
-                currentConversation =
-                mutableListOf<Msg>().apply {
-                    addAll(
-                        event.conversation.talk
-                    )
-                },
+                currentConversation = event.conversation,
                 showHistoryScreen = false
             )
 
@@ -163,8 +173,15 @@ class MainViewModel @Inject constructor(
             is MainEvents.ThemWhoTfChanged -> _state.value = state.value.copy(themWhoTF = event.it)
         }
     }
-}
 
+    private fun getCurrentDate(): String {
+        val current = LocalDateTime.now()
+        val formatter = DateTimeFormatter.ofPattern("dd, MM, yyyy")
+        val formattedDate = current.format(formatter)
+
+        return formattedDate
+    }
+}
 
 
 var history = listOf(
