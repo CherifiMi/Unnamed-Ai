@@ -24,6 +24,8 @@ import com.example.unnamedai.util.theme.UnnamedAiTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 
+// TODO: user clicks on the 3 dots  they can edit and delete the responses independently
+
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

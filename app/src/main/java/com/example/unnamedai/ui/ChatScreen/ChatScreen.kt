@@ -251,6 +251,9 @@ fun YouItem(item: Msg, name: String) {
                     contentDescription = null
                 )
             }
+            
+            Spacer(modifier = Modifier.height(16.dp))
+            
         }
     }
 }
@@ -261,6 +264,7 @@ fun ThemItem(item: Msg, name: String) {
     var animation by remember {
         mutableStateOf(false)
     }
+
 
     LaunchedEffect(Unit) {
         animation = true
