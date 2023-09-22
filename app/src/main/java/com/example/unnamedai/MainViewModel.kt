@@ -5,14 +5,15 @@ import android.widget.Toast
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.unnamedai.domain.model.Conversation
 import com.example.unnamedai.domain.model.From
 import com.example.unnamedai.domain.model.Msg
 import com.example.unnamedai.domain.use_case.UseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 
@@ -107,16 +108,20 @@ class MainViewModel @Inject constructor(
                         loadingChatRespond = true
                     )
 
-                val aiRespond = runBlocking(Dispatchers.IO) {
-                    delay(1000)
-                    useCases.askChatGBT(content)
+                viewModelScope.launch(Dispatchers.Main) {
+                    val aiRespond = withContext(Dispatchers.Default) {
+                        useCases.askChatGBT(content)
+                    }
+
+                    _state.value =
+                        state.value.copy(
+                            currentConversation = state.value.currentConversation
+                                .apply { add(Msg(From.YourAi, aiRespond)) },
+                            loadingChatRespond = false
+                        )
+
                 }
 
-                _state.value =
-                    state.value.copy(
-                        currentConversation = state.value.currentConversation
-                            .apply { add(Msg(From.YourAi, aiRespond)) },
-                    )
 
                 // TODO: every time chatgpt responds, save convo to db
             }

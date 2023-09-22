@@ -23,7 +23,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -67,14 +66,6 @@ import com.example.unnamedai.util.theme.abel
 @Composable
 fun ChatScreen(modifier: Modifier = Modifier, viewmodel: MainViewModel = hiltViewModel()) {
     val state = viewmodel.state.value
-
-    val listState = rememberLazyListState()
-    LaunchedEffect(state.currentConversation.size){
-
-        if (state.currentConversation.size>0){
-            listState.scrollToItem(state.currentConversation.size+1)
-        }
-    }
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
@@ -124,7 +115,9 @@ fun ChatScreen(modifier: Modifier = Modifier, viewmodel: MainViewModel = hiltVie
                         .fillMaxWidth(),
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
                     keyboardActions = KeyboardActions(onDone = {
-                        viewmodel.onEvent(MainEvents.PressDoneOnKeyboard)
+                        if (!state.loadingChatRespond){
+                            viewmodel.onEvent(MainEvents.PressDoneOnKeyboard)
+                        }
                     }),
                     colors = TextFieldDefaults.textFieldColors(
                         backgroundColor = Color.Transparent,
@@ -154,12 +147,33 @@ fun ChatScreen(modifier: Modifier = Modifier, viewmodel: MainViewModel = hiltVie
         backgroundColor = Color.Black
     ) {
         LazyColumn(
-            state = listState,
+            reverseLayout = true,
             modifier = modifier
                 .fillMaxSize(),
         ) {
+
             item {
                 Spacer(modifier = Modifier.height(72.dp))
+            }
+
+            item {
+                if (state.loadingChatRespond){
+                    Box(modifier = Modifier
+                        .fillMaxWidth()
+                        .height(60.dp)
+                        .background(Yellow)
+                    )
+                }
+            }
+
+
+            items(state.currentConversation.reversed()) {
+                if (it.from == From.You) {
+                    YouItem(it, state.youTF)
+                } else {
+                    Spacer(modifier = Modifier.height(40.dp))
+                    ThemItem(it, state.themTF)
+                }
             }
 
             item {
@@ -182,27 +196,8 @@ fun ChatScreen(modifier: Modifier = Modifier, viewmodel: MainViewModel = hiltVie
                 }
             }
 
-            items(state.currentConversation) {
-                if (it.from == From.You) {
-                    YouItem(it, state.youTF)
-                } else {
-                    Spacer(modifier = Modifier.height(40.dp))
-                    ThemItem(it, state.themTF)
-                }
-            }
-
             item {
                 Spacer(modifier = Modifier.height(72.dp))
-            }
-
-            item {
-                if (state.loadingChatRespond){
-                    Box(modifier = Modifier
-                        .fillMaxWidth()
-                        .height(60.dp)
-                        .background(Yellow)
-                    )
-                }
             }
         }
     }
