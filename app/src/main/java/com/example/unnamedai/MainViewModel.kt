@@ -174,7 +174,6 @@ class MainViewModel @Inject constructor(
                 showHistoryScreen = false,
                 showChatScreen = false,
                 wlcVisibility = false,
-                currentConversation = null,
                 youTF = "",
                 youWhoTF = "",
                 themTF = "",
