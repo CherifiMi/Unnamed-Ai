@@ -32,6 +32,13 @@ sealed class MainEvents {
     object ClickBacKFromHistory : MainEvents()
     data class DeleteConversationFromHistory(val id: Int) : MainEvents()
     data class SelectConversationFromHistory(val conversation: Conversation) : MainEvents()
+
+    data class ChatTfChanged(val it: String) : MainEvents()
+
+    data class YouTfChanged(val it: String) : MainEvents()
+    data class YouWhoTfChanged(val it: String) : MainEvents()
+    data class ThemTfChanged(val it: String) : MainEvents()
+    data class ThemWhoTfChanged(val it: String) : MainEvents()
 }
 
 data class MainState(
@@ -122,8 +129,8 @@ class MainViewModel @Inject constructor(
             }
 
             MainEvents.ClickGoToHistory -> _state.value = state.value.copy(showHistoryScreen = true) //TODO: update history
-            MainEvents.ClickBacKFromHistory -> state.value.copy(showHistoryScreen = false)
-            MainEvents.ClickStartNewChat -> state.value.copy(
+            MainEvents.ClickBacKFromHistory -> _state.value = state.value.copy(showHistoryScreen = false)
+            MainEvents.ClickStartNewChat -> _state.value = state.value.copy(
                 setterVisibility = true,
                 showHistoryScreen = false,
                 showChatScreen = false,
@@ -137,7 +144,7 @@ class MainViewModel @Inject constructor(
             )
 
             is MainEvents.DeleteConversationFromHistory -> useCases.deleteConversation(event.id) // TODO: update history
-            is MainEvents.SelectConversationFromHistory -> state.value.copy(
+            is MainEvents.SelectConversationFromHistory -> _state.value = state.value.copy(
                 currentConversation =
                 mutableListOf<Msg>().apply {
                     addAll(
@@ -146,6 +153,13 @@ class MainViewModel @Inject constructor(
                 },
                 showHistoryScreen = false
             )
+
+            is MainEvents.ChatTfChanged -> _state.value = state.value.copy(chatTF = event.it)
+
+            is MainEvents.YouTfChanged -> _state.value = state.value.copy(youTF = event.it)
+            is MainEvents.YouWhoTfChanged -> _state.value = state.value.copy(youWhoTF = event.it)
+            is MainEvents.ThemTfChanged -> _state.value = state.value.copy(themTF = event.it)
+            is MainEvents.ThemWhoTfChanged -> _state.value = state.value.copy(themWhoTF = event.it)
         }
     }
 }

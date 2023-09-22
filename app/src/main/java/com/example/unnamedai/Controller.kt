@@ -1,9 +1,6 @@
 package com.example.unnamedai
 
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-
-//main
+/*//main
 val showChatScreen = mutableStateOf(false)
 val showHistoryScreen = mutableStateOf(false)
 
@@ -22,7 +19,7 @@ var chatTF = mutableStateOf("")
 
 
 //mock data
-val currentConvo = mutableStateListOf<Message>()
+val currentConvo = mutableStateListOf<Message>()*/
 
 
 var history = listOf(

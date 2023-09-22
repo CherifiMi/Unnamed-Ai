@@ -50,28 +50,28 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.unnamedai.Message
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.unnamedai.MainEvents
+import com.example.unnamedai.MainViewModel
 import com.example.unnamedai.R
-import com.example.unnamedai.chatTF
-import com.example.unnamedai.currentConvo
-import com.example.unnamedai.showHistoryScreen
-import com.example.unnamedai.themTF
+import com.example.unnamedai.domain.model.From
+import com.example.unnamedai.domain.model.Msg
 import com.example.unnamedai.util.theme.Black
 import com.example.unnamedai.util.theme.Blue
 import com.example.unnamedai.util.theme.Input
 import com.example.unnamedai.util.theme.White
 import com.example.unnamedai.util.theme.abel
-import com.example.unnamedai.youTF
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun ChatScreen(modifier: Modifier = Modifier) {
+fun ChatScreen(modifier: Modifier = Modifier, viewmodel: MainViewModel = hiltViewModel()) {
+    val state = viewmodel.state.value
 
     val listState = rememberLazyListState()
-    LaunchedEffect(currentConvo.size){
+    LaunchedEffect(state.currentConversation.size){
 
-        if (currentConvo.size>0){
-            listState.scrollToItem(currentConvo.size+1)
+        if (state.currentConversation.size>0){
+            listState.scrollToItem(state.currentConversation.size+1)
         }
     }
 
@@ -94,7 +94,7 @@ fun ChatScreen(modifier: Modifier = Modifier) {
                     modifier = Modifier
                         .clip(RoundedCornerShape(100)),
                     onClick = {
-                        showHistoryScreen.value = true
+                        viewmodel.onEvent(MainEvents.ClickGoToHistory)
                     }
                 ) {
                     Icon(
@@ -116,16 +116,14 @@ fun ChatScreen(modifier: Modifier = Modifier) {
                 contentAlignment = Alignment.CenterStart
             ) {
                 TextField(
-                    value = chatTF.value,
-                    onValueChange = { chatTF.value = it },
+                    value = state.chatTF,
+                    onValueChange = { viewmodel.onEvent(MainEvents.ChatTfChanged(it)) },
                     modifier = Modifier
                         .border(BorderStroke(1.dp, Color.Transparent))
                         .fillMaxWidth(),
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
                     keyboardActions = KeyboardActions(onDone = {
-                        currentConvo.add(Message(from = "you", content = chatTF.value))
-                        chatTF.value = ""
-                        currentConvo.add(Message(from = "them", content = "Hello Super Mario.. What brings you here?"))
+                        viewmodel.onEvent(MainEvents.PressDoneOnKeyboard)
                     }),
                     colors = TextFieldDefaults.textFieldColors(
                         backgroundColor = Color.Transparent,
@@ -165,7 +163,7 @@ fun ChatScreen(modifier: Modifier = Modifier) {
 
             item {
                 AnimatedVisibility(
-                    visible = currentConvo.size == 0,
+                    visible = state.currentConversation.size == 0,
                     enter = fadeIn(),
                     exit = fadeOut() + shrinkOut()
                 ) {
@@ -173,7 +171,7 @@ fun ChatScreen(modifier: Modifier = Modifier) {
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(40.dp),
-                        text = "Lets get this conversation between ${youTF.value} and ${themTF.value} started!",
+                        text = "Lets get this conversation between ${state.youTF} and ${state.themTF} started!",
                         textAlign = TextAlign.Center,
                         fontFamily = abel,
                         lineHeight = 28.sp,
@@ -183,12 +181,12 @@ fun ChatScreen(modifier: Modifier = Modifier) {
                 }
             }
 
-            items(currentConvo) {
-                if (it.from == "you") {
-                    YouItem(it)
+            items(state.currentConversation) {
+                if (it.from == From.You) {
+                    YouItem(it, state.youTF)
                 } else {
                     Spacer(modifier = Modifier.height(40.dp))
-                    ThemItem(it)
+                    ThemItem(it, state.themTF)
                 }
             }
 
@@ -200,7 +198,9 @@ fun ChatScreen(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun YouItem(item: Message) {
+fun YouItem(item: Msg, name: String) {
+
+
     var animation by remember {
         mutableStateOf(false)
     }
@@ -231,7 +231,7 @@ fun YouItem(item: Message) {
                     modifier = Modifier
                         .padding(start = 24.dp)
                         .alpha(.5f),
-                    text = "You (${youTF.value})",
+                    text = "You (${name})",
                     fontFamily = abel,
                     fontSize = 16.sp,
                     lineHeight = 21.sp,
@@ -251,7 +251,7 @@ fun YouItem(item: Message) {
 
 
 @Composable
-fun ThemItem(item: Message) {
+fun ThemItem(item: Msg, name: String) {
     var animation by remember {
         mutableStateOf(false)
     }
@@ -315,7 +315,7 @@ fun ThemItem(item: Message) {
                 modifier = Modifier
                     .padding(start = 24.dp)
                     .alpha(.5f),
-                text = "Them (${themTF.value})",
+                text = "Them (${name})",
                 fontFamily = abel,
                 fontSize = 16.sp,
                 lineHeight = 21.sp,

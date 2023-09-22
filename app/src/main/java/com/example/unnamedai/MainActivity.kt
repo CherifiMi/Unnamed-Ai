@@ -16,6 +16,7 @@ import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.unnamedai.ui.ChatScreen.ChatScreen
 import com.example.unnamedai.ui.HistoryScreen.HistoryScreen
 import com.example.unnamedai.ui.StartScreen
@@ -41,12 +42,15 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun App() {
+fun App(viewmodel: MainViewModel = hiltViewModel()) {
+
+    val state = viewmodel.state.value
+
     Box(modifier = Modifier.fillMaxSize()) {
 
         AnimatedVisibility(
             exit = fadeOut(),
-            visible = !showChatScreen.value
+            visible = !state.showChatScreen
         ) {
             StartScreen()
         }
@@ -54,21 +58,21 @@ fun App() {
         AnimatedVisibility(
             enter = fadeIn(),
             exit = fadeOut(),
-            visible = showChatScreen.value
+            visible = state.showChatScreen
         ) {
             ChatScreen()
         }
 
         AnimatedVisibility(
-            visible = showHistoryScreen.value,
+            visible = state.showHistoryScreen,
             enter = slideInHorizontally(
                 initialOffsetX = { 300 },
                 animationSpec = tween(durationMillis = 300)
-            )+ fadeIn(),
+            ) + fadeIn(),
             exit = slideOutHorizontally(
                 targetOffsetX = { 300 },
                 animationSpec = tween(durationMillis = 300)
-            )+ fadeOut()
+            ) + fadeOut()
         ) {
             HistoryScreen()
         }
