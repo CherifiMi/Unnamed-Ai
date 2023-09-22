@@ -132,7 +132,14 @@ class MainViewModel @Inject constructor(
 
                 viewModelScope.launch(Dispatchers.Main) {
                     val aiRespond = withContext(Dispatchers.IO) {
-                        useCases.askChatGBT(content, state.value.currentConversation!!.talk)
+                        useCases.askChatGBT(
+                            content,
+                            state.value.currentConversation!!.talk,
+                            state.value.currentConversation!!.let {
+                                "your name is ${it.aiName} and you are a ${it.infoAboutAi}," +
+                                        " my name is ${it.name} and I am a ${it.infoAboutYou}"
+                            }
+                        )
                     }
 
                     _state.value =
@@ -164,6 +171,7 @@ class MainViewModel @Inject constructor(
 
 
             }
+
             MainEvents.ClickBacKFromHistory -> _state.value =
                 state.value.copy(showHistoryScreen = false)
 
@@ -190,6 +198,7 @@ class MainViewModel @Inject constructor(
                 }
                 // TODO: update history
             }
+
             is MainEvents.SelectConversationFromHistory -> _state.value = state.value.copy(
                 currentConversation = event.conversation,
                 showHistoryScreen = false

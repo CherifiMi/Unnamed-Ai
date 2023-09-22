@@ -6,7 +6,7 @@ import com.example.unnamedai.domain.repository.ApiRepository
 class AskChatGBT(
     private val apiRepository: ApiRepository
 ) {
-    suspend operator fun invoke(q: String, qList: List<Msg>): String{
-        return apiRepository.askChatGBT(q, qList)
+    suspend operator fun invoke(q: String, qList: List<Msg>, prompt: String): String{
+        return apiRepository.askChatGBT(q, qList, prompt)
     }
 }
