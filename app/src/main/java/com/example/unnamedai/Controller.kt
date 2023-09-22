@@ -29,10 +29,10 @@ data class Convo(
     val you: String,
     val them: String,
     val date: String,
-    val talk: List<Message>,
+    val talk: List<Message2>,
 )
 
-data class Message(
+data class Message2(
     val from: String,
     val content: String
 )
