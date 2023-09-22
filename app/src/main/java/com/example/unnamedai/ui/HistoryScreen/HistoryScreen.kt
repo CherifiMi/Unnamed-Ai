@@ -108,7 +108,7 @@ fun HistoryScreen(viewmodel: MainViewModel = hiltViewModel()) {
 
         LazyColumn(Modifier.fillMaxSize()) {
             items(state.history) {
-                Column(Modifier.fillMaxSize()) {
+                Column(Modifier.fillMaxSize().clickable { viewmodel.onEvent(MainEvents.SelectConversationFromHistory(it)) }) {
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
