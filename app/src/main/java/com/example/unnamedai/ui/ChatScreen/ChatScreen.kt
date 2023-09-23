@@ -9,9 +9,11 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -20,12 +22,14 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.DropdownMenu
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
@@ -115,7 +119,7 @@ fun ChatScreen(modifier: Modifier = Modifier, viewmodel: MainViewModel = hiltVie
                         .fillMaxWidth(),
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
                     keyboardActions = KeyboardActions(onDone = {
-                        if (!state.loadingChatRespond){
+                        if (!state.loadingChatRespond) {
                             viewmodel.onEvent(MainEvents.PressDoneOnKeyboard)
                         }
                     }),
@@ -158,12 +162,13 @@ fun ChatScreen(modifier: Modifier = Modifier, viewmodel: MainViewModel = hiltVie
             }
 
             item {
-                if (state.loadingChatRespond){
-                    Box(modifier = Modifier
-                        .size(80.dp)
-                        .padding(8.dp),
+                if (state.loadingChatRespond) {
+                    Box(
+                        modifier = Modifier
+                            .size(80.dp)
+                            .padding(8.dp),
                         contentAlignment = Alignment.Center
-                    ){
+                    ) {
                         LoadingBall()
                     }
                 }
@@ -207,7 +212,7 @@ fun ChatScreen(modifier: Modifier = Modifier, viewmodel: MainViewModel = hiltVie
 }
 
 @Composable
-fun YouItem(item: Msg, name: String) {
+fun YouItem(item: Msg, name: String, viewmodel: MainViewModel = hiltViewModel()) {
 
     var animation by remember { mutableStateOf(false) }
 
@@ -243,17 +248,15 @@ fun YouItem(item: Msg, name: String) {
                     lineHeight = 21.sp,
                     color = White,
                 )
-                Image(
-                    modifier = Modifier
-                        .padding(end = 24.dp)
-                        .alpha(.5f),
-                    painter = painterResource(id = R.drawable.more),
-                    contentDescription = null
+                ButtonWithPopup(
+                    Pair("Edit", {}),
+                    Pair("Delete", {}),
+                    White
                 )
             }
-            
+
             Spacer(modifier = Modifier.height(16.dp))
-            
+
         }
     }
 }
@@ -271,7 +274,7 @@ fun ThemItem(item: Msg, name: String) {
     }
 
     AnimatedVisibility(
-        visible = animation, enter =  fadeIn()
+        visible = animation, enter = fadeIn()
     ) {
         Column(
             Modifier
@@ -289,8 +292,11 @@ fun ThemItem(item: Msg, name: String) {
                     .background(Blue, RoundedCornerShape(100))
                     .clip(RoundedCornerShape(100)),
                 contentAlignment = Alignment.Center
-            ){
-                Image(painter = painterResource(id = R.drawable.white_ball), contentDescription = null)
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.white_ball),
+                    contentDescription = null
+                )
             }
 
             Text(
@@ -309,15 +315,13 @@ fun ThemItem(item: Msg, name: String) {
             Row(
                 Modifier
                     .height(34.dp)
-                    .fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                    .fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
+            ) {
                 Spacer(modifier = Modifier.size(8.dp))
-                Icon(
-                    modifier = Modifier
-                        .padding(end = 24.dp)
-                        .alpha(.5f),
-                    tint = Black,
-                    painter = painterResource(id = R.drawable.more),
-                    contentDescription = null
+                ButtonWithPopup(
+                    Pair("Edit", {}),
+                    Pair("Delelte", {}),
+                    Black
                 )
             }
 
@@ -332,6 +336,64 @@ fun ThemItem(item: Msg, name: String) {
                 color = Black,
             )
 
+        }
+    }
+}
+
+@Composable
+fun ButtonWithPopup(item1: Pair<String, () -> Unit>, item2: Pair<String, () -> Unit>, tint: Color) {
+    var expanded by remember { mutableStateOf(false) }
+    Box {
+        IconButton(onClick = { expanded = true }) {
+            Icon(
+                modifier = Modifier
+                    .padding(end = 40.dp)
+                    .alpha(.5f),
+                tint = tint,
+                painter = painterResource(id = R.drawable.more),
+                contentDescription = null
+            )
+        }
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false },
+            modifier = Modifier
+                .background(Black)
+                .width(IntrinsicSize.Min)
+            ,
+        ) {
+            Column(
+                horizontalAlignment = Alignment.Start,
+                verticalArrangement = Arrangement.SpaceEvenly
+            ) {
+                Text(
+                    modifier = Modifier
+                        .padding(horizontal = 24.dp)
+                        .clickable {
+                            item1.second.invoke()
+                            expanded = false
+                        },
+                    text = item1.first,
+                    fontFamily = abel,
+                    fontSize = 20.sp,
+                    lineHeight = 21.sp,
+                    color = White,
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    modifier = Modifier
+                        .padding(horizontal = 24.dp)
+                        .clickable {
+                            item2.second.invoke()
+                            expanded = false
+                        },
+                    text = item2.first,
+                    fontFamily = abel,
+                    fontSize = 20.sp,
+                    lineHeight = 21.sp,
+                    color = White,
+                )
+            }
         }
     }
 }

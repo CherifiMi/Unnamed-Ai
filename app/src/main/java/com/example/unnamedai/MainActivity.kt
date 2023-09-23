@@ -78,6 +78,14 @@ fun App(viewmodel: MainViewModel = hiltViewModel()) {
         ) {
             HistoryScreen()
         }
+
+        AnimatedVisibility(
+            visible = state.popUpItem != null,
+            enter = fadeIn(),
+            exit = fadeOut(),
+        ) {
+            state.popUpItem?.compose?.invoke()
+        }
     }
 }
 

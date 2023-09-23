@@ -2,6 +2,7 @@ package com.example.unnamedai
 
 import android.content.Context
 import android.widget.Toast
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -17,6 +18,11 @@ import kotlinx.coroutines.withContext
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
+
+
+data class PopUpItem(
+    val compose:  @Composable () -> Unit
+)
 
 
 sealed class MainEvents {
@@ -40,6 +46,9 @@ sealed class MainEvents {
     data class YouWhoTfChanged(val it: String) : MainEvents()
     data class ThemTfChanged(val it: String) : MainEvents()
     data class ThemWhoTfChanged(val it: String) : MainEvents()
+
+    data class ShowPopUp(val it: PopUpItem) : MainEvents()
+    object HidePopUp: MainEvents()
 }
 
 data class MainState(
@@ -58,9 +67,9 @@ data class MainState(
     //chat,
     var chatTF: String = "",
     //data
-    //val currentConversation: MutableList<Msg> = mutableListOf(),
     val currentConversation: Conversation? = null,
     var history: List<Conversation> = listOf(),
+    var popUpItem: PopUpItem? = null
 )
 
 @HiltViewModel
@@ -211,6 +220,9 @@ class MainViewModel @Inject constructor(
             is MainEvents.YouWhoTfChanged -> _state.value = state.value.copy(youWhoTF = event.it)
             is MainEvents.ThemTfChanged -> _state.value = state.value.copy(themTF = event.it)
             is MainEvents.ThemWhoTfChanged -> _state.value = state.value.copy(themWhoTF = event.it)
+
+            is MainEvents.ShowPopUp -> _state.value = state.value.copy(popUpItem = event.it)
+            MainEvents.HidePopUp -> _state.value = state.value.copy(popUpItem = null)
         }
     }
 

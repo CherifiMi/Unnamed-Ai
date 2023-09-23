@@ -72,6 +72,5 @@ fun StartScreen(modifier: Modifier = Modifier, viewmodel: MainViewModel = hiltVi
         ) {
             ChatSetter()
         }
-
     }
 }

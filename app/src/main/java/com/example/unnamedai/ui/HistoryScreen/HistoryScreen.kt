@@ -30,6 +30,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.unnamedai.MainEvents
 import com.example.unnamedai.MainViewModel
 import com.example.unnamedai.R
+import com.example.unnamedai.ui.ChatScreen.ButtonWithPopup
 import com.example.unnamedai.util.theme.Black
 import com.example.unnamedai.util.theme.Input
 import com.example.unnamedai.util.theme.White
@@ -110,7 +111,7 @@ fun HistoryScreen(viewmodel: MainViewModel = hiltViewModel()) {
                 Column(
                     Modifier
                         .fillMaxSize()
-                        .clickable { viewmodel.onEvent(MainEvents.SelectConversationFromHistory(it)) }) {
+                ) {
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
@@ -130,15 +131,17 @@ fun HistoryScreen(viewmodel: MainViewModel = hiltViewModel()) {
                             lineHeight = 21.sp,
                             color = White,
                         )
-                        IconButton(onClick = { viewmodel.onEvent(MainEvents.DeleteConversationFromHistory(it.id!!)) }) {
-                            Icon(
-                                modifier = Modifier
-                                    .padding(end = 24.dp)
-                                    .alpha(.5f),
-                                painter = painterResource(id = R.drawable.more),
-                                contentDescription = null
-                            )
-                        }
+
+                        ButtonWithPopup(
+                            Pair(
+                                "Select"
+                            ) { viewmodel.onEvent(MainEvents.SelectConversationFromHistory(it)) },
+                            Pair("Delete") {
+                                viewmodel.onEvent(MainEvents.DeleteConversationFromHistory(it.id!!))
+                            },
+                            White
+                        )
+
                     }
 
                     Text(
