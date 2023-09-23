@@ -66,9 +66,11 @@ import com.example.unnamedai.util.theme.Input
 import com.example.unnamedai.util.theme.White
 import com.example.unnamedai.util.theme.abel
 
+
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun ChatScreen(modifier: Modifier = Modifier, viewmodel: MainViewModel = hiltViewModel()) {
+
     val state = viewmodel.state.value
 
     Scaffold(
@@ -175,12 +177,12 @@ fun ChatScreen(modifier: Modifier = Modifier, viewmodel: MainViewModel = hiltVie
             }
 
 
-            items(state.currentConversation!!.talk.reversed()) {
-                if (it.from == From.You) {
-                    YouItem(it, state.youTF)
+            items(state.currentConversation!!.talk.reversed()) { item ->
+                if (item.from == From.You) {
+                    YouItem(item, state.youTF)
                 } else {
                     Spacer(modifier = Modifier.height(40.dp))
-                    ThemItem(it, state.themTF)
+                    ThemItem(item, state.themTF)
                 }
             }
 

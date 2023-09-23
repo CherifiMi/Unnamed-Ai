@@ -21,7 +21,7 @@ import javax.inject.Inject
 
 
 data class PopUpItem(
-    val compose:  @Composable () -> Unit
+    val compose: @Composable () -> Unit
 )
 
 
@@ -48,7 +48,7 @@ sealed class MainEvents {
     data class ThemWhoTfChanged(val it: String) : MainEvents()
 
     data class ShowPopUp(val it: PopUpItem) : MainEvents()
-    object HidePopUp: MainEvents()
+    object HidePopUp : MainEvents()
 
     data class DeleteMsgConversation(val it: Msg) : MainEvents()
 
@@ -72,7 +72,7 @@ data class MainState(
     //data
     val currentConversation: Conversation? = null,
     var history: List<Conversation> = listOf(),
-    var popUpItem: PopUpItem? = null
+    var popUpItem: PopUpItem? = null,
 )
 
 @HiltViewModel
@@ -133,8 +133,11 @@ class MainViewModel @Inject constructor(
 
                 _state.value =
                     state.value.copy(
-                        currentConversation = state.value.currentConversation
-                            .apply { this!!.talk.add(Msg(From.You, content)) },
+                        currentConversation = state.value.currentConversation.apply {
+                            this!!.talk.add(
+                                Msg(From.You, content)
+                            )
+                        },
                         chatTF = "",
                         loadingChatRespond = true
                     )
@@ -197,17 +200,23 @@ class MainViewModel @Inject constructor(
             )
 
             is MainEvents.DeleteMsgConversation -> {
+
+                val newConversation = state.value.currentConversation.apply { this!!.talk.remove(event.it) }
+
+                _state.value = state.value.copy(loadingChatRespond = true)
+
                 viewModelScope.launch(Dispatchers.Main) {
-
-                    val newConversation = state.value.currentConversation!!.apply {
-                        talk.remove(event.it)
-                    }
-
-                    _state.value = state.value.copy(currentConversation = newConversation)
 
                     withContext(Dispatchers.IO) {
                         useCases.saveConversation(state.value.currentConversation!!)
                     }
+
+                    _state.value =
+                        state.value.copy(
+                            currentConversation = newConversation,
+                            loadingChatRespond = false
+                        )
+
                 }
             }
 
