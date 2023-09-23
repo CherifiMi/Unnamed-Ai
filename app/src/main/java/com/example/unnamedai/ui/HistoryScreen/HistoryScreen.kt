@@ -30,7 +30,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.unnamedai.MainEvents
 import com.example.unnamedai.MainViewModel
 import com.example.unnamedai.R
-import com.example.unnamedai.ui.ChatScreen.ButtonWithPopup
+import com.example.unnamedai.ui.ChatScreen.components.ButtonWithPopup
 import com.example.unnamedai.util.theme.Black
 import com.example.unnamedai.util.theme.Input
 import com.example.unnamedai.util.theme.White

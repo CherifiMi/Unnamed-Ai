@@ -18,7 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.unnamedai.ui.ChatScreen.ChatScreen
-import com.example.unnamedai.ui.ChatScreen.EditTextPopUp
+import com.example.unnamedai.ui.ChatScreen.components.EditTextPopUp
 import com.example.unnamedai.ui.HistoryScreen.HistoryScreen
 import com.example.unnamedai.ui.StartScreen
 import com.example.unnamedai.util.theme.UnnamedAiTheme

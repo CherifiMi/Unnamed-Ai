@@ -1,5 +1,6 @@
 package com.example.unnamedai.ui.StartScreen.Components
 
+import android.opengl.Visibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -19,24 +20,32 @@ import com.example.unnamedai.util.theme.White
 import com.example.unnamedai.util.theme.abel
 
 @Composable
-fun UnnamedButton(modifier: Modifier = Modifier, text: String, click : () -> Unit) {
-    Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .wrapContentHeight()
-            .padding(vertical = 20.dp, horizontal = 40.dp)
-            .clickable { click() }
-            .background(color = Black, RoundedCornerShape(20))
-            .clip(RoundedCornerShape(20)),
-        contentAlignment = Alignment.Center
-    ) {
-        Text(
-            modifier = Modifier.padding(vertical = 16.dp),
-            text = text,
-            lineHeight = 24.sp,
-            fontFamily = abel,
-            fontSize = 20.sp,
-            color = White,
-        )
+fun UnnamedButton(modifier: Modifier = Modifier, text: String, isVisible:Boolean = true, click : () -> Unit) {
+
+    if (isVisible){
+
+        Box(
+            modifier = modifier
+                .fillMaxWidth()
+                .wrapContentHeight()
+                .padding(vertical = 20.dp, horizontal = 40.dp)
+                .clickable { click() }
+                .background(color = Black, RoundedCornerShape(20))
+                .clip(RoundedCornerShape(20)),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                modifier = Modifier.padding(vertical = 16.dp),
+                text = text,
+                lineHeight = 24.sp,
+                fontFamily = abel,
+                fontSize = 20.sp,
+                color = White,
+            )
+        }
+
+
     }
+
+
 }
