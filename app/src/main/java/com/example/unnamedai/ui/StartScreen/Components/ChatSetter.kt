@@ -8,16 +8,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
-import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -25,9 +21,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.unnamedai.MainEvents
 import com.example.unnamedai.MainViewModel
 import com.example.unnamedai.util.theme.Black
-import com.example.unnamedai.util.theme.Border
-import com.example.unnamedai.util.theme.Grey
-import com.example.unnamedai.util.theme.Input
 import com.example.unnamedai.util.theme.abel
 
 
@@ -94,38 +87,3 @@ fun ChatSetter(modifier: Modifier = Modifier, viewmodel: MainViewModel = hiltVie
     }
 }
 
-@Composable
-fun UnnamedTextField(
-    modifier: Modifier = Modifier,
-    placeholder: String,
-    value: String,
-    onChanged: (it: String) -> Unit
-) {
-    OutlinedTextField(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp, horizontal = 20.dp),
-        value = value,
-        onValueChange = { onChanged(it) },
-        placeholder = {
-            Text(
-                text = placeholder,
-                fontFamily = abel,
-                lineHeight = 22.sp,
-                fontSize = 18.sp,
-                color = Grey,
-            )
-        },
-        shape = RoundedCornerShape(20),
-        textStyle = TextStyle(
-            color = Input, fontFamily = abel,
-            lineHeight = 22.sp,
-            fontSize = 18.sp
-        ),
-        colors = TextFieldDefaults.outlinedTextFieldColors(
-            focusedBorderColor = Grey,
-            unfocusedBorderColor = Border
-        ),
-
-        )
-}

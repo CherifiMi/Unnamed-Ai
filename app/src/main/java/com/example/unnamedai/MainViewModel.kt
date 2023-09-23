@@ -11,12 +11,11 @@ import com.example.unnamedai.domain.model.Conversation
 import com.example.unnamedai.domain.model.From
 import com.example.unnamedai.domain.model.Msg
 import com.example.unnamedai.domain.use_case.UseCases
+import com.example.unnamedai.util.ext.getCurrentDate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 
@@ -93,8 +92,7 @@ class MainViewModel @Inject constructor(
         when (event) {
             MainEvents.SwipeSplashScreen -> _state.value = state.value.copy(wlcVisibility = true)
 
-            MainEvents.ClickWelcome -> _state.value =
-                state.value.copy(setterVisibility = true, wlcVisibility = false)
+            MainEvents.ClickWelcome -> _state.value = state.value.copy(setterVisibility = true, wlcVisibility = false)
 
             is MainEvents.ClickChatSetter -> {
                 if (
@@ -189,8 +187,7 @@ class MainViewModel @Inject constructor(
 
             }
 
-            MainEvents.ClickBacKFromHistory -> _state.value =
-                state.value.copy(showHistoryScreen = false)
+            MainEvents.ClickBacKFromHistory -> _state.value = state.value.copy(showHistoryScreen = false)
 
             MainEvents.ClickStartNewChat -> _state.value = state.value.copy(
                 setterVisibility = true,
@@ -307,13 +304,5 @@ class MainViewModel @Inject constructor(
 
             }
         }
-    }
-
-    private fun getCurrentDate(): String {
-        val current = LocalDateTime.now()
-        val formatter = DateTimeFormatter.ofPattern("dd, MM, yyyy")
-        val formattedDate = current.format(formatter)
-
-        return formattedDate
     }
 }

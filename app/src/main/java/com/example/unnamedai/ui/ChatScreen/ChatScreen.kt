@@ -9,28 +9,20 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.DropdownMenu
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
@@ -38,21 +30,11 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
@@ -64,14 +46,12 @@ import com.example.unnamedai.MainEvents
 import com.example.unnamedai.MainViewModel
 import com.example.unnamedai.R
 import com.example.unnamedai.domain.model.From
-import com.example.unnamedai.domain.model.Msg
 import com.example.unnamedai.ui.ChatScreen.components.LoadingBall
-import com.example.unnamedai.util.theme.Black
-import com.example.unnamedai.util.theme.Blue
+import com.example.unnamedai.ui.ChatScreen.components.ThemItem
+import com.example.unnamedai.ui.ChatScreen.components.YouItem
 import com.example.unnamedai.util.theme.Input
 import com.example.unnamedai.util.theme.White
 import com.example.unnamedai.util.theme.abel
-import kotlinx.coroutines.delay
 
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -221,257 +201,7 @@ fun ChatScreen(modifier: Modifier = Modifier, viewmodel: MainViewModel = hiltVie
     }
 }
 
-@Composable
-fun YouItem(item: Msg, name: String, viewmodel: MainViewModel = hiltViewModel()) {
-
-    var animation by remember { mutableStateOf(false) }
-
-    LaunchedEffect(Unit) {
-        animation = true
-    }
-
-    AnimatedVisibility(visible = animation, enter = fadeIn()) {
-        Column(
-            Modifier
-                .fillMaxWidth()
-                .wrapContentHeight()
-        ) {
-            Text(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 20.dp),
-                text = item.content,
-                textAlign = TextAlign.Start,
-                fontFamily = abel,
-                lineHeight = 28.sp,
-                fontSize = 22.sp,
-                color = White,
-            )
-            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                Text(
-                    modifier = Modifier
-                        .padding(start = 24.dp)
-                        .alpha(.5f),
-                    text = "You (${name})",
-                    fontFamily = abel,
-                    fontSize = 16.sp,
-                    lineHeight = 21.sp,
-                    color = White,
-                )
-                ButtonWithPopup(
-                    Pair("Edit") { viewmodel.onEvent(MainEvents.ShowPopUp(item)) },
-                    Pair("Delete") { viewmodel.onEvent(MainEvents.DeleteMsgConversation(item)) },
-                    White
-                )
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-        }
-    }
-}
 
 
-@Composable
-fun ThemItem(item: Msg, name: String, viewmodel: MainViewModel = hiltViewModel()) {
-
-    var animation by remember {
-        mutableStateOf(false)
-    }
-
-    LaunchedEffect(Unit) {
-        animation = true
-    }
-
-    AnimatedVisibility(
-        visible = animation, enter = fadeIn()
-    ) {
-        Column(
-            Modifier
-                .fillMaxWidth()
-                .wrapContentHeight()
-                .padding(20.dp)
-                .background(White, RoundedCornerShape(10.dp))
-
-        ) {
-            Box(
-                Modifier
-                    .offset(y = -20.dp)
-                    .padding(horizontal = 20.dp)
-                    .size(40.dp)
-                    .background(Blue, RoundedCornerShape(100))
-                    .clip(RoundedCornerShape(100)),
-                contentAlignment = Alignment.Center
-            ) {
-                Image(
-                    painter = painterResource(id = R.drawable.white_ball),
-                    contentDescription = null
-                )
-            }
-
-            Text(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 20.dp)
-                    .padding(bottom = 15.dp),
-                text = item.content,
-                textAlign = TextAlign.Start,
-                fontFamily = abel,
-                lineHeight = 28.sp,
-                fontSize = 22.sp,
-                color = Black,
-            )
-
-            Row(
-                Modifier
-                    .height(34.dp)
-                    .fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Spacer(modifier = Modifier.size(8.dp))
-                ButtonWithPopup(
-                    Pair("Edit") { viewmodel.onEvent(MainEvents.ShowPopUp(item)) },
-                    Pair("Delete") { viewmodel.onEvent(MainEvents.DeleteMsgConversation(item)) },
-                    Black
-                )
-            }
-
-            Text(
-                modifier = Modifier
-                    .padding(start = 24.dp)
-                    .alpha(.5f),
-                text = "Them (${name})",
-                fontFamily = abel,
-                fontSize = 16.sp,
-                lineHeight = 21.sp,
-                color = Black,
-            )
-
-        }
-    }
-}
-
-@Composable
-fun ButtonWithPopup(item1: Pair<String, () -> Unit>, item2: Pair<String, () -> Unit>, tint: Color) {
-    var expanded by remember { mutableStateOf(false) }
-    Box {
-        IconButton(onClick = { expanded = true }) {
-            Icon(
-                modifier = Modifier
-                    .padding(end = 40.dp)
-                    .alpha(.5f),
-                tint = tint,
-                painter = painterResource(id = R.drawable.more),
-                contentDescription = null
-            )
-        }
-        DropdownMenu(
-            expanded = expanded,
-            onDismissRequest = { expanded = false },
-            modifier = Modifier
-                .background(Black)
-                .width(IntrinsicSize.Min),
-        ) {
-            Column(
-                horizontalAlignment = Alignment.Start,
-                verticalArrangement = Arrangement.SpaceEvenly
-            ) {
-                Box(modifier = Modifier
-                    .clickable {
-                        item1.second.invoke()
-                        expanded = false
-                    }
-                ) {
-                    Text(
-                        modifier = Modifier
-                            .padding(horizontal = 24.dp, vertical = 8.dp),
-                        text = item1.first,
-                        fontFamily = abel,
-                        fontSize = 20.sp,
-                        lineHeight = 21.sp,
-                        color = White,
-                    )
-                }
-                Spacer(modifier = Modifier.height(8.dp))
-                Box(modifier = Modifier
-                    .clickable {
-                        item2.second.invoke()
-                        expanded = false
-                    }
-                ) {
-                    Text(
-                        modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp),
-                        text = item2.first,
-                        fontFamily = abel,
-                        fontSize = 20.sp,
-                        lineHeight = 21.sp,
-                        color = White,
-                    )
-                }
-            }
-        }
-    }
-}
-
-@OptIn(ExperimentalComposeUiApi::class)
-@Composable
-fun EditTextPopUp(viewmodel: MainViewModel = hiltViewModel()) {
-
-    val state = viewmodel.state.value
-
-    val showKeyboard = remember { mutableStateOf(true) }
-    val focusRequester = remember { FocusRequester() }
-    val keyboard = LocalSoftwareKeyboardController.current
-
-    LaunchedEffect(state.popupControl) {
-        if (showKeyboard.value && state.popupControl) {
-            focusRequester.requestFocus()
-            delay(100)
-            keyboard?.show()
-        }
-    }
 
 
-    if (state.popupControl) {
-        Box(
-            Modifier
-                .fillMaxSize()
-                .padding(16.dp)
-                .pointerInput(Unit) { detectTapGestures { viewmodel.onEvent(MainEvents.HidePopUp) } },
-            contentAlignment = Alignment.Center
-        ) {
-            Box(
-                modifier = Modifier
-                    .padding(horizontal = 80.dp, vertical = 40.dp)
-                    .background(Black, RoundedCornerShape(5))
-                    .fillMaxWidth()
-            ) {
-                TextField(
-                    value = state.editTF,
-                    onValueChange = {
-                        viewmodel.onEvent(MainEvents.EditTfChanged(it))
-                    },
-                    modifier = Modifier
-                        .focusRequester(focusRequester)
-                        .border(BorderStroke(1.dp, Color.Transparent))
-                        .fillMaxWidth(),
-                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                    keyboardActions = KeyboardActions(onDone = {
-                        viewmodel.onEvent(MainEvents.PressDoneOnEditKeyboard)
-                    }),
-                    colors = TextFieldDefaults.textFieldColors(
-                        backgroundColor = Color.Transparent,
-                        focusedIndicatorColor = Color.Transparent,
-                        unfocusedIndicatorColor = Color.Transparent,
-                        cursorColor = White
-                    ),
-                    textStyle = TextStyle(
-                        fontFamily = abel,
-                        lineHeight = 22.sp,
-                        fontSize = 20.sp,
-                        color = White,
-                    )
-                )
-            }
-        }
-    }
-}
