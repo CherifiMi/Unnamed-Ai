@@ -82,9 +82,9 @@ fun WelcomePopUp(modifier: Modifier = Modifier, viewmodel: MainViewModel = hiltV
             viewmodel.onEvent(MainEvents.ClickWelcome)
         }
 
-        UnnamedButton(text = "History") {
+        /*UnnamedButton(text = "History") {
             viewmodel.onEvent(MainEvents.ClickGoToHistory)
-        }
+        }*/
 
         Spacer(modifier = Modifier.size(34.dp))
 
