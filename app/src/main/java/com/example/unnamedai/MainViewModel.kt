@@ -49,6 +49,9 @@ sealed class MainEvents {
 
     data class ShowPopUp(val it: PopUpItem) : MainEvents()
     object HidePopUp: MainEvents()
+
+    data class DeleteMsgConversation(val it: Msg) : MainEvents()
+
 }
 
 data class MainState(
@@ -192,6 +195,21 @@ class MainViewModel @Inject constructor(
                 themWhoTF = "",
                 chatTF = "",
             )
+
+            is MainEvents.DeleteMsgConversation -> {
+                viewModelScope.launch(Dispatchers.Main) {
+
+                    val newConversation = state.value.currentConversation!!.apply {
+                        talk.remove(event.it)
+                    }
+
+                    _state.value = state.value.copy(currentConversation = newConversation)
+
+                    withContext(Dispatchers.IO) {
+                        useCases.saveConversation(state.value.currentConversation!!)
+                    }
+                }
+            }
 
             is MainEvents.DeleteConversationFromHistory -> {
                 viewModelScope.launch(Dispatchers.Main) {

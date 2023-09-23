@@ -250,7 +250,7 @@ fun YouItem(item: Msg, name: String, viewmodel: MainViewModel = hiltViewModel())
                 )
                 ButtonWithPopup(
                     Pair("Edit", {}),
-                    Pair("Delete", {}),
+                    Pair("Delete") { viewmodel.onEvent(MainEvents.DeleteMsgConversation(item)) },
                     White
                 )
             }
@@ -263,11 +263,11 @@ fun YouItem(item: Msg, name: String, viewmodel: MainViewModel = hiltViewModel())
 
 
 @Composable
-fun ThemItem(item: Msg, name: String) {
+fun ThemItem(item: Msg, name: String, viewmodel: MainViewModel = hiltViewModel()) {
+
     var animation by remember {
         mutableStateOf(false)
     }
-
 
     LaunchedEffect(Unit) {
         animation = true
@@ -319,8 +319,8 @@ fun ThemItem(item: Msg, name: String) {
             ) {
                 Spacer(modifier = Modifier.size(8.dp))
                 ButtonWithPopup(
-                    Pair("Edit", {}),
-                    Pair("Delelte", {}),
+                    Pair("Edit") { },
+                    Pair("Delete") { viewmodel.onEvent(MainEvents.DeleteMsgConversation(item)) },
                     Black
                 )
             }
