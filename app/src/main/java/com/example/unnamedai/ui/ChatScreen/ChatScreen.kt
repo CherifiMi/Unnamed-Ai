@@ -65,7 +65,6 @@ import com.example.unnamedai.util.theme.Black
 import com.example.unnamedai.util.theme.Blue
 import com.example.unnamedai.util.theme.Input
 import com.example.unnamedai.util.theme.White
-import com.example.unnamedai.util.theme.Yellow
 import com.example.unnamedai.util.theme.abel
 
 
@@ -218,10 +217,41 @@ fun ChatScreen(modifier: Modifier = Modifier, viewmodel: MainViewModel = hiltVie
                 alignment = Alignment.Center,
                 onDismissRequest = { viewmodel.onEvent(MainEvents.HidePopUp) }
             ) {
-                Box(modifier = Modifier
-                    .background(Yellow)
-                    .size(200.dp))
+                LazyColumn(
+                    modifier = Modifier
+                        .padding(horizontal = 80.dp, vertical = 40.dp)
+                        .background(Black, RoundedCornerShape(20))
+                        .fillMaxWidth()
+                ) {
 
+                    item {
+                        TextField(
+                            value = state.editTF,
+                            onValueChange = {
+                                viewmodel.onEvent(MainEvents.EditTfChanged(it))
+                            },
+                            modifier = Modifier
+                                .border(BorderStroke(1.dp, Color.Transparent))
+                                .fillMaxWidth(),
+                            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                            keyboardActions = KeyboardActions(onDone = {
+                                //viewmodel.onEvent(MainEvents.PressDoneOnKeyboard)
+                            }),
+                            colors = TextFieldDefaults.textFieldColors(
+                                backgroundColor = Color.Transparent,
+                                focusedIndicatorColor = Color.Transparent,
+                                unfocusedIndicatorColor = Color.Transparent,
+                                cursorColor = White
+                            ),
+                            textStyle = TextStyle(
+                                fontFamily = abel,
+                                lineHeight = 22.sp,
+                                fontSize = 20.sp,
+                                color = White,
+                            )
+                        )
+                    }
+                }
             }
         }
 
@@ -376,8 +406,7 @@ fun ButtonWithPopup(item1: Pair<String, () -> Unit>, item2: Pair<String, () -> U
             onDismissRequest = { expanded = false },
             modifier = Modifier
                 .background(Black)
-                .width(IntrinsicSize.Min)
-            ,
+                .width(IntrinsicSize.Min),
         ) {
             Column(
                 horizontalAlignment = Alignment.Start,

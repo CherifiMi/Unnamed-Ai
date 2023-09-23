@@ -41,6 +41,7 @@ sealed class MainEvents {
     data class SelectConversationFromHistory(val conversation: Conversation) : MainEvents()
 
     data class ChatTfChanged(val it: String) : MainEvents()
+    data class EditTfChanged(val it: String) : MainEvents()
 
     data class YouTfChanged(val it: String) : MainEvents()
     data class YouWhoTfChanged(val it: String) : MainEvents()
@@ -69,6 +70,7 @@ data class MainState(
     var themWhoTF: String = "",
     //chat,
     var chatTF: String = "",
+    var editTF: String = "",
     var popupControl: Boolean = false,
     //data
     val currentConversation: Conversation? = null,
@@ -243,13 +245,14 @@ class MainViewModel @Inject constructor(
             )
 
             is MainEvents.ChatTfChanged -> _state.value = state.value.copy(chatTF = event.it)
+            is MainEvents.EditTfChanged -> _state.value = state.value.copy(editTF = event.it)
 
             is MainEvents.YouTfChanged -> _state.value = state.value.copy(youTF = event.it)
             is MainEvents.YouWhoTfChanged -> _state.value = state.value.copy(youWhoTF = event.it)
             is MainEvents.ThemTfChanged -> _state.value = state.value.copy(themTF = event.it)
             is MainEvents.ThemWhoTfChanged -> _state.value = state.value.copy(themWhoTF = event.it)
 
-            is MainEvents.ShowPopUp -> _state.value = state.value.copy(popupControl = true)
+            is MainEvents.ShowPopUp -> _state.value = state.value.copy(popupControl = true, editTF = event.it.content)
             MainEvents.HidePopUp -> _state.value = state.value.copy(popupControl = false)
         }
     }
