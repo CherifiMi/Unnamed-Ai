@@ -78,8 +78,6 @@ fun App(viewmodel: MainViewModel = hiltViewModel()) {
         ) {
             HistoryScreen()
         }
-
-
     }
 }
 

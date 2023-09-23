@@ -55,11 +55,11 @@ import com.example.unnamedai.MainViewModel
 import com.example.unnamedai.R
 import com.example.unnamedai.domain.model.From
 import com.example.unnamedai.domain.model.Msg
+import com.example.unnamedai.ui.ChatScreen.components.LoadingBall
 import com.example.unnamedai.util.theme.Black
 import com.example.unnamedai.util.theme.Blue
 import com.example.unnamedai.util.theme.Input
 import com.example.unnamedai.util.theme.White
-import com.example.unnamedai.util.theme.Yellow
 import com.example.unnamedai.util.theme.abel
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -150,6 +150,7 @@ fun ChatScreen(modifier: Modifier = Modifier, viewmodel: MainViewModel = hiltVie
             reverseLayout = true,
             modifier = modifier
                 .fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
             item {
@@ -159,10 +160,12 @@ fun ChatScreen(modifier: Modifier = Modifier, viewmodel: MainViewModel = hiltVie
             item {
                 if (state.loadingChatRespond){
                     Box(modifier = Modifier
-                        .fillMaxWidth()
-                        .height(60.dp)
-                        .background(Yellow)
-                    )
+                        .size(80.dp)
+                        .padding(8.dp),
+                        contentAlignment = Alignment.Center
+                    ){
+                        LoadingBall()
+                    }
                 }
             }
 

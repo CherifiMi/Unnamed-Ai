@@ -201,6 +201,11 @@ class MainViewModel @Inject constructor(
 
             is MainEvents.SelectConversationFromHistory -> _state.value = state.value.copy(
                 currentConversation = event.conversation,
+                youTF = event.conversation.name,
+                themTF = event.conversation.aiName,
+                youWhoTF = event.conversation.infoAboutYou,
+                themWhoTF = event.conversation.infoAboutAi,
+                chatTF = "",
                 showHistoryScreen = false
             )
 
