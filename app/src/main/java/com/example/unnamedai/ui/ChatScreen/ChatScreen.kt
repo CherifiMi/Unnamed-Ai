@@ -209,10 +209,7 @@ fun ChatScreen(modifier: Modifier = Modifier, viewmodel: MainViewModel = hiltVie
 @Composable
 fun YouItem(item: Msg, name: String) {
 
-
-    var animation by remember {
-        mutableStateOf(false)
-    }
+    var animation by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         animation = true

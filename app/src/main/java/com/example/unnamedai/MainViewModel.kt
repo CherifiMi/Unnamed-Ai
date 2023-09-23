@@ -110,9 +110,6 @@ class MainViewModel @Inject constructor(
                     )
                 )
 
-                // TODO: set the chatgpt
-
-
                 viewModelScope.launch {
                     useCases.saveConversation(state.value.currentConversation!!)
                 }
@@ -196,7 +193,6 @@ class MainViewModel @Inject constructor(
 
                     _state.value = state.value.copy(history = dbData)
                 }
-                // TODO: update history
             }
 
             is MainEvents.SelectConversationFromHistory -> _state.value = state.value.copy(
