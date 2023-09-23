@@ -73,6 +73,7 @@ data class MainState(
     var chatTF: String = "",
     var editTF: String = "",
     var popupControl: Boolean = false,
+    var selectedMsgIndex: Int = 0,
     //data
     val currentConversation: Conversation? = null,
     var history: List<Conversation> = listOf(),
@@ -205,7 +206,8 @@ class MainViewModel @Inject constructor(
 
             is MainEvents.DeleteMsgConversation -> {
 
-                val newConversation = state.value.currentConversation.apply { this!!.talk.remove(event.it) }
+                val newConversation =
+                    state.value.currentConversation.apply { this!!.talk.remove(event.it) }
 
                 _state.value = state.value.copy(loadingChatRespond = true)
 
@@ -253,9 +255,55 @@ class MainViewModel @Inject constructor(
             is MainEvents.ThemTfChanged -> _state.value = state.value.copy(themTF = event.it)
             is MainEvents.ThemWhoTfChanged -> _state.value = state.value.copy(themWhoTF = event.it)
 
-            is MainEvents.ShowPopUp -> _state.value = state.value.copy(popupControl = true, editTF = event.it.content)
+            is MainEvents.ShowPopUp -> {
+
+                _state.value = state.value.copy(
+                    selectedMsgIndex = state.value.currentConversation!!.talk.indexOf(event.it),
+                    popupControl = true, editTF = event.it.content
+                )
+            }
+
             MainEvents.HidePopUp -> _state.value = state.value.copy(popupControl = false)
-            MainEvents.PressDoneOnEditKeyboard -> {}
+            MainEvents.PressDoneOnEditKeyboard -> {
+                if (state.value.selectedMsgIndex == -1) {
+                    _state.value = state.value.copy(popupControl = false)
+                    return
+                }
+                if (state.value.editTF == state.value.currentConversation!!.talk[state.value.selectedMsgIndex].content) {
+                    _state.value = state.value.copy(popupControl = false)
+                    return
+                }
+
+
+                val newConversation =
+                    state.value.currentConversation.apply {
+                        this!!.talk.set(
+                            state.value.selectedMsgIndex,
+                            Msg(
+                                from = this.talk[state.value.selectedMsgIndex].from,
+                                state.value.editTF
+                            )
+                        )
+                    }
+
+                _state.value = state.value.copy(loadingChatRespond = true)
+
+                viewModelScope.launch(Dispatchers.Main) {
+
+                    withContext(Dispatchers.IO) {
+                        useCases.saveConversation(state.value.currentConversation!!)
+                    }
+
+                    _state.value =
+                        state.value.copy(
+                            currentConversation = newConversation,
+                            popupControl = false,
+                            loadingChatRespond = false
+                        )
+
+                }
+
+            }
         }
     }
 

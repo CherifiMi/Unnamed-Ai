@@ -432,7 +432,6 @@ fun EditTextPopUp(viewmodel: MainViewModel = hiltViewModel()) {
 
 
     if (state.popupControl) {
-
         Box(
             Modifier
                 .fillMaxSize()
@@ -474,7 +473,5 @@ fun EditTextPopUp(viewmodel: MainViewModel = hiltViewModel()) {
                 )
             }
         }
-
     }
-
 }
