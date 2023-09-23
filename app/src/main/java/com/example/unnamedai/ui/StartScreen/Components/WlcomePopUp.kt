@@ -82,7 +82,7 @@ fun WelcomePopUp(modifier: Modifier = Modifier, viewmodel: MainViewModel = hiltV
             viewmodel.onEvent(MainEvents.ClickWelcome)
         }
 
-        UnnamedButton(text = "History") {
+        UnnamedButton(text = "History", isVisible = false) {
             viewmodel.onEvent(MainEvents.ClickGoToHistory)
         }
 

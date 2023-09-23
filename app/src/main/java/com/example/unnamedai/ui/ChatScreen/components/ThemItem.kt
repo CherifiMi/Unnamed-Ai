@@ -36,7 +36,6 @@ import com.example.unnamedai.MainEvents
 import com.example.unnamedai.MainViewModel
 import com.example.unnamedai.R
 import com.example.unnamedai.domain.model.Msg
-import com.example.unnamedai.ui.ChatScreen.ButtonWithPopup
 import com.example.unnamedai.util.theme.Black
 import com.example.unnamedai.util.theme.Blue
 import com.example.unnamedai.util.theme.White
