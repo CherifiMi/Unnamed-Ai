@@ -53,6 +53,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Popup
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.unnamedai.MainEvents
 import com.example.unnamedai.MainViewModel
@@ -64,6 +65,7 @@ import com.example.unnamedai.util.theme.Black
 import com.example.unnamedai.util.theme.Blue
 import com.example.unnamedai.util.theme.Input
 import com.example.unnamedai.util.theme.White
+import com.example.unnamedai.util.theme.Yellow
 import com.example.unnamedai.util.theme.abel
 
 
@@ -210,6 +212,19 @@ fun ChatScreen(modifier: Modifier = Modifier, viewmodel: MainViewModel = hiltVie
                 Spacer(modifier = Modifier.height(72.dp))
             }
         }
+
+        if (state.popupControl) {
+            Popup(
+                alignment = Alignment.Center,
+                onDismissRequest = { viewmodel.onEvent(MainEvents.HidePopUp) }
+            ) {
+                Box(modifier = Modifier
+                    .background(Yellow)
+                    .size(200.dp))
+
+            }
+        }
+
     }
 }
 
@@ -251,7 +266,7 @@ fun YouItem(item: Msg, name: String, viewmodel: MainViewModel = hiltViewModel())
                     color = White,
                 )
                 ButtonWithPopup(
-                    Pair("Edit", {}),
+                    Pair("Edit") { viewmodel.onEvent(MainEvents.ShowPopUp(item)) },
                     Pair("Delete") { viewmodel.onEvent(MainEvents.DeleteMsgConversation(item)) },
                     White
                 )
@@ -321,7 +336,7 @@ fun ThemItem(item: Msg, name: String, viewmodel: MainViewModel = hiltViewModel()
             ) {
                 Spacer(modifier = Modifier.size(8.dp))
                 ButtonWithPopup(
-                    Pair("Edit") { },
+                    Pair("Edit") { viewmodel.onEvent(MainEvents.ShowPopUp(item)) },
                     Pair("Delete") { viewmodel.onEvent(MainEvents.DeleteMsgConversation(item)) },
                     Black
                 )
