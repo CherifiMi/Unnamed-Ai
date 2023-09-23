@@ -59,7 +59,6 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.Popup
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.unnamedai.MainEvents
 import com.example.unnamedai.MainViewModel
@@ -122,6 +121,7 @@ fun ChatScreen(modifier: Modifier = Modifier, viewmodel: MainViewModel = hiltVie
                 contentAlignment = Alignment.CenterStart
             ) {
                 TextField(
+                    enabled = !state.popupControl,
                     value = state.chatTF,
                     onValueChange = { viewmodel.onEvent(MainEvents.ChatTfChanged(it)) },
                     modifier = Modifier
@@ -375,33 +375,38 @@ fun ButtonWithPopup(item1: Pair<String, () -> Unit>, item2: Pair<String, () -> U
                 horizontalAlignment = Alignment.Start,
                 verticalArrangement = Arrangement.SpaceEvenly
             ) {
-                Text(
-                    modifier = Modifier
-                        .padding(horizontal = 24.dp)
-                        .clickable {
-                            item1.second.invoke()
-                            expanded = false
-                        },
-                    text = item1.first,
-                    fontFamily = abel,
-                    fontSize = 20.sp,
-                    lineHeight = 21.sp,
-                    color = White,
-                )
+                Box(modifier = Modifier
+                    .clickable {
+                        item1.second.invoke()
+                        expanded = false
+                    }
+                ) {
+                    Text(
+                        modifier = Modifier
+                            .padding(horizontal = 24.dp, vertical = 8.dp),
+                        text = item1.first,
+                        fontFamily = abel,
+                        fontSize = 20.sp,
+                        lineHeight = 21.sp,
+                        color = White,
+                    )
+                }
                 Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    modifier = Modifier
-                        .padding(horizontal = 24.dp)
-                        .clickable {
-                            item2.second.invoke()
-                            expanded = false
-                        },
-                    text = item2.first,
-                    fontFamily = abel,
-                    fontSize = 20.sp,
-                    lineHeight = 21.sp,
-                    color = White,
-                )
+                Box(modifier = Modifier
+                    .clickable {
+                        item2.second.invoke()
+                        expanded = false
+                    }
+                ) {
+                    Text(
+                        modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp),
+                        text = item2.first,
+                        fontFamily = abel,
+                        fontSize = 20.sp,
+                        lineHeight = 21.sp,
+                        color = White,
+                    )
+                }
             }
         }
     }
@@ -432,49 +437,41 @@ fun EditTextPopUp(viewmodel: MainViewModel = hiltViewModel()) {
             Modifier
                 .fillMaxSize()
                 .padding(16.dp)
-                .pointerInput(Unit) { detectTapGestures { viewmodel.onEvent(MainEvents.HidePopUp) } }
+                .pointerInput(Unit) { detectTapGestures { viewmodel.onEvent(MainEvents.HidePopUp) } },
+            contentAlignment = Alignment.Center
         ) {
-            Popup(
-                alignment = Alignment.Center,
-                onDismissRequest = {}
+            Box(
+                modifier = Modifier
+                    .padding(horizontal = 80.dp, vertical = 40.dp)
+                    .background(Black, RoundedCornerShape(5))
+                    .fillMaxWidth()
             ) {
-                LazyColumn(
+                TextField(
+                    value = state.editTF,
+                    onValueChange = {
+                        viewmodel.onEvent(MainEvents.EditTfChanged(it))
+                    },
                     modifier = Modifier
-                        .padding(horizontal = 80.dp, vertical = 40.dp)
-                        .background(Black, RoundedCornerShape(5))
-                        .fillMaxWidth()
-                ) {
-                    item {
-                        TextField(
-                            value = state.editTF,
-                            onValueChange = {
-                                viewmodel.onEvent(MainEvents.EditTfChanged(it))
-                            },
-                            modifier = Modifier
-                                .focusRequester(focusRequester)
-                                .border(BorderStroke(1.dp, Color.Transparent))
-                                .fillMaxWidth(),
-                            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                            keyboardActions = KeyboardActions(onDone = {
-                                viewmodel.onEvent(MainEvents.PressDoneOnEditKeyboard)
-                            }),
-                            colors = TextFieldDefaults.textFieldColors(
-                                backgroundColor = Color.Transparent,
-                                focusedIndicatorColor = Color.Transparent,
-                                unfocusedIndicatorColor = Color.Transparent,
-                                cursorColor = White
-                            ),
-                            textStyle = TextStyle(
-                                fontFamily = abel,
-                                lineHeight = 22.sp,
-                                fontSize = 20.sp,
-                                color = White,
-                            )
-                        )
-                    }
-
-                }
-
+                        .focusRequester(focusRequester)
+                        .border(BorderStroke(1.dp, Color.Transparent))
+                        .fillMaxWidth(),
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                    keyboardActions = KeyboardActions(onDone = {
+                        viewmodel.onEvent(MainEvents.PressDoneOnEditKeyboard)
+                    }),
+                    colors = TextFieldDefaults.textFieldColors(
+                        backgroundColor = Color.Transparent,
+                        focusedIndicatorColor = Color.Transparent,
+                        unfocusedIndicatorColor = Color.Transparent,
+                        cursorColor = White
+                    ),
+                    textStyle = TextStyle(
+                        fontFamily = abel,
+                        lineHeight = 22.sp,
+                        fontSize = 20.sp,
+                        color = White,
+                    )
+                )
             }
         }
 
