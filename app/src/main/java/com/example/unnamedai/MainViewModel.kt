@@ -244,7 +244,9 @@ class MainViewModel @Inject constructor(
                 youWhoTF = event.conversation.infoAboutYou,
                 themWhoTF = event.conversation.infoAboutAi,
                 chatTF = "",
-                showHistoryScreen = false
+                showHistoryScreen = false,
+                showChatScreen = true,
+                wlcVisibility = false
             )
 
             is MainEvents.ChatTfChanged -> _state.value = state.value.copy(chatTF = event.it)
