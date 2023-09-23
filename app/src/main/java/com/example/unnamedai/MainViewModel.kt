@@ -50,6 +50,7 @@ sealed class MainEvents {
 
     data class ShowPopUp(val it: Msg) : MainEvents()
     object HidePopUp : MainEvents()
+    object PressDoneOnEditKeyboard : MainEvents()
 
     data class DeleteMsgConversation(val it: Msg) : MainEvents()
 
@@ -254,6 +255,7 @@ class MainViewModel @Inject constructor(
 
             is MainEvents.ShowPopUp -> _state.value = state.value.copy(popupControl = true, editTF = event.it.content)
             MainEvents.HidePopUp -> _state.value = state.value.copy(popupControl = false)
+            MainEvents.PressDoneOnEditKeyboard -> {}
         }
     }
 
